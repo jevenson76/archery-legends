@@ -1,50 +1,48 @@
 # Archery Legends Next Steps
 
 **Last Updated:** 2026-03-25
-**Current Phase:** MVP — Phase 1: Foundation
+**Current Phase:** MVP — Phase 2: Core Mechanic
 
 ---
 
 ## Immediate Priority
 
-### 1. Verify Roblox Studio Connection (Required First)
+### 1. BowController — Input & Aim (Day 3)
 
-Before proceeding with any development, verify MCP connection:
+Create `StarterPlayerScripts/BowController.client.luau`:
 
+**Deliverables:**
+- [ ] Mouse aim tracking (bow follows cursor direction)
+- [ ] Draw mechanic (hold LMB to charge power 0-100% over 1.5s)
+- [ ] Power meter UI visualization
+- [ ] Aim arc trajectory preview (using Config gravity value)
+- [ ] Release fires (log for now, no server communication yet)
+
+**MCP Workflow:**
 ```
-Use MCP tool: get_place_info
+create_object (LocalScript) → set_script_source → start_playtest → verify input
 ```
 
-**If connection fails:**
-- Verify Roblox Studio is running
-- Verify robloxstudio-mcp plugin is installed
-- Check MCP server status
+---
 
-**Blocker:** Cannot proceed with development until Studio connection verified.
+## Completed Phases
+
+### Phase 1: Foundation ✓
+
+| Task | Status |
+|------|--------|
+| Arena ground plane (100x100 studs) | ✓ |
+| Firing line marker + SpawnLocation | ✓ |
+| Target with 4 scoring zones at 30 studs | ✓ |
+| Config.luau with all constants | ✓ |
+| Types.luau with PlayerData type | ✓ |
+| All RemoteEvents/Functions | ✓ |
+| Folder structure | ✓ |
+| Playtest verification | ✓ |
 
 ---
 
 ## Pending Implementation (per mvp-task-list.md)
-
-### Phase 1: Foundation (Days 1-2)
-
-| Task | Status | Reference |
-|------|--------|-----------|
-| Arena & Project Structure | PENDING | mvp-task-list.md Day 1 |
-| Config Module & Remotes | PENDING | mvp-task-list.md Day 2 |
-
-**Day 1 Deliverables:**
-- [ ] Flat arena ground plane (100x100 studs)
-- [ ] Firing line position marker
-- [ ] Target stand at 30 studs distance
-- [ ] Target model with 4 concentric zones
-- [ ] SpawnLocation at firing line
-- [ ] Complete folder structure
-
-**Day 2 Deliverables:**
-- [ ] `ReplicatedStorage/Modules/Config.luau`
-- [ ] `ReplicatedStorage/Remotes/` with all RemoteEvents/Functions
-- [ ] `ReplicatedStorage/Modules/Types.luau`
 
 ### Phase 2: Core Mechanic (Days 3-6)
 
@@ -90,10 +88,7 @@ Per PROJECT_OPERATING_MODEL.md, always work in this order:
 
 ## Blockers
 
-| Blocker | Impact | Resolution |
-|---------|--------|------------|
-| Studio connection unverified | Cannot develop | Run get_place_info via MCP |
-| No Studio project created | Cannot develop | Create new Roblox place |
+None currently. MCP connection verified, foundation complete.
 
 ---
 

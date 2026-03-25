@@ -1,23 +1,66 @@
-# Roblox Archery Game
+# CLAUDE.md
 
-## What This Is
-A monetized, high-engagement archery game on Roblox. Solo developer build. Target: top-chart retention metrics, cosmetic-first monetization, addictive core loop.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+**Archery Legends** — A monetized, high-engagement archery game on Roblox. Solo developer build targeting top-chart retention metrics with cosmetic-first monetization.
+
+**Current Phase:** MVP (core mechanic, basic scoring, one arena, data persistence)
 
 ## Tech Stack
-- Roblox Studio + Luau (Roblox's Lua 5.1 derivative)
-- robloxstudio-mcp (39 tools — direct Studio integration via MCP)
-- DataStore for persistence, OrderedDataStore for leaderboards
-- MarketplaceService for monetization
 
-## MCP Integration
-This project uses the robloxstudio-mcp server to interact with Roblox Studio directly. Key tools:
+- **Engine:** Roblox Studio + Luau (Roblox's Lua 5.1 derivative)
+- **MCP Integration:** robloxstudio-mcp (39+ tools for direct Studio manipulation)
+- **Persistence:** DataStore, OrderedDataStore for leaderboards
+- **Monetization:** MarketplaceService (cosmetic-only)
 
-**Build & Edit:** `create_instance`, `delete_instance`, `set_property`, `mass_set_property`, `mass_create_objects_with_properties`, `edit_script`, `execute_luau`
-**Inspect:** `get_file_tree`, `get_script_source`, `get_instance_properties`, `get_instance_children`, `search_objects`, `grep_scripts`, `get_project_structure`
-**Test:** `start_playtest`, `get_playtest_output`, `stop_playtest`
-**Library:** `export_build`, `import_build`, `create_build`, `list_library`
+## Development Workflow
 
-Workflow: write/edit scripts → inject into Studio via MCP → start_playtest → read output → fix → repeat. This loop can run autonomously.
+**All game code lives in Roblox Studio, not local files.** Use MCP tools for all interactions.
+
+```
+1. Inspect current state (get_script_source, get_project_structure)
+       ↓
+2. Write/edit code via MCP (set_script_source, edit_script_lines)
+       ↓
+3. Verify edit applied (get_script_source to confirm)
+       ↓
+4. Playtest (start_playtest → get_playtest_output → stop_playtest)
+       ↓
+5. Fix errors and re-test until clean
+       ↓
+6. Update _ops/PROGRESS.md
+```
+
+## MCP Tools Reference
+
+**Inspect (read-only):**
+- `get_project_structure` — Full hierarchy tree
+- `get_script_source` — Read script code (use before/after edits)
+- `grep_scripts` — Search all scripts for patterns
+- `get_instance_properties` — Get instance configuration
+- `search_objects` — Find instances by name/class
+
+**Modify (write):**
+- `set_script_source` — Replace entire script (for new scripts)
+- `edit_script_lines` — Replace specific line range (for targeted fixes)
+- `insert_script_lines` — Add lines at position
+- `delete_script_lines` — Remove line range
+- `create_object` — Create new instance
+- `delete_object` — Remove instance
+- `set_property` / `mass_set_property` — Configure properties
+
+**Build Library:**
+- `generate_build` — Procedural build via JS code
+- `create_build` — Define build from part arrays
+- `import_build` — Place build in Studio
+- `list_library` — Browse saved builds
+
+**Test:**
+- `start_playtest` — Begin play mode ("play") or server-only ("run")
+- `get_playtest_output` — Poll logs for errors
+- `stop_playtest` — End playtest, get final output
 
 ## Project Structure (Roblox Studio Hierarchy)
 ```
@@ -81,21 +124,71 @@ game
 - Post-match screen: always show XP gained, progress to next unlock, "Play Again" prominent
 - First session: player hits a bullseye within 30 seconds (tutorial), gets free cosmetic within 60s
 
-## Verification
-After creating or editing scripts:
-1. Use `get_script_source` to confirm the edit took
-2. Use `start_playtest` → `get_playtest_output` → `stop_playtest` to test
-3. Check output for errors/warnings before moving on
-4. If errors, fix and re-test. Don't move to next task with broken code.
+## Work Order
 
-## Scope Control
-This is a solo dev project. When a task grows beyond what can be built in one session:
-- Flag it and suggest phasing
-- Always deliver working code, not partial implementations
-- MVP before polish. Ship the core loop first.
+Always work in this order (per PROJECT_OPERATING_MODEL.md):
 
-## Current Phase
-MVP — Core archery mechanic, basic scoring, one arena, data persistence. No shop, no battle pass, no clans yet.
+```
+1. Core mechanics (shooting, scoring)
+       ↓
+2. Server security (validation, anti-cheat)
+       ↓
+3. Data persistence (DataStore)
+       ↓
+4. Progression systems (XP, levels)
+       ↓
+5. Monetization hooks
+       ↓
+6. UI polish (LAST)
+```
 
-## Docs
-Design documents live in `docs/` in this project folder. Reference `docs/game-design-document.md` for full game vision and `docs/engagement-psychology.md` for retention mechanics.
+**If a task attempts UI before core mechanics are stable, redirect to core work first.**
+
+## Verification Checklist
+
+Before marking any script task complete:
+
+1. `get_script_source` — Confirm edit applied correctly
+2. `start_playtest` — No syntax errors
+3. `get_playtest_output` — No runtime errors
+4. Feature works as intended
+5. `stop_playtest` — Clean exit
+
+**Never proceed to next task with broken/erroring code.**
+
+## Local File Structure
+
+```
+/home/jevenson/dev/_pet_projects/roblox/
+├── CLAUDE.md                -- This file
+├── _ops/                    -- Operational tracking
+│   ├── BOOT.md              -- Document authority hierarchy
+│   ├── PROJECT_OPERATING_MODEL.md -- What this project is
+│   ├── PROJECT_IDENTITY.md  -- Project context & scope
+│   ├── PROGRESS.md          -- Completed work log
+│   └── NEXT_STEPS.md        -- Current priorities
+├── docs/
+│   ├── game-design-document.md  -- Full GDD
+│   ├── engagement-psychology.md -- Retention mechanics
+│   └── mvp-task-list.md         -- 20-day phased build plan
+└── .claude/
+    ├── commands/            -- Slash commands (/start-session)
+    └── skills/              -- Development skills
+```
+
+## Session Protocol
+
+1. Run `/start-session` to initialize context
+2. Check `_ops/NEXT_STEPS.md` for current priority
+3. Verify Studio connection via `get_place_info`
+4. Work in MCP loop (inspect → edit → verify → playtest → fix)
+5. Update `_ops/PROGRESS.md` after significant changes
+
+## Reference Documents
+
+| Document | Purpose |
+|----------|---------|
+| `_ops/PROGRESS.md` | WHERE we are |
+| `_ops/NEXT_STEPS.md` | WHERE we go next |
+| `docs/game-design-document.md` | WHAT to build |
+| `docs/engagement-psychology.md` | WHY we build it |
