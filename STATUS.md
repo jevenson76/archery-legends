@@ -1,7 +1,7 @@
 # Archery Legends — Project Status
 
 **Last Updated:** 2026-03-25
-**Current Phase:** MVP — Phase 2: Core Mechanic
+**Current Phase:** MVP — Phase 2 COMPLETE, Ready for Phase 3: Data Persistence
 **Playtest Status:** PASSING (zero errors)
 
 ---
@@ -12,10 +12,10 @@
 |-----------|--------|----------|
 | Foundation | COMPLETE | Arena, target, Config, Types, Remotes |
 | Visual Polish | COMPLETE | Terrain, particles, torches, lighting |
-| Core Mechanic | IN PROGRESS | BowController ✓, Arrow flight ✓, Hit detection ✓, Round lifecycle pending |
+| Core Mechanic | COMPLETE | BowController ✓, Arrow flight ✓, Hit detection ✓, Round lifecycle ✓ |
+| UI/HUD | COMPLETE | Score display, arrows remaining, hit feedback, round summary |
 | Data Persistence | NOT STARTED | — |
 | Game Modes | NOT STARTED | — |
-| UI/HUD | NOT STARTED | — |
 
 ---
 
@@ -48,7 +48,8 @@ game
 ├── ServerScriptService/
 │   └── GameManager.server.luau (arrow flight, hit detection, scoring)
 ├── StarterPlayer/StarterPlayerScripts/
-│   └── BowController.client.luau (aim, draw, fire input)
+│   ├── BowController.client.luau (aim, draw, fire input)
+│   └── HUDController.client.luau (score, arrows, feedback, round summary)
 └── StarterGui/ (folders created: HUD, ShopGui, etc.)
 ```
 
@@ -56,9 +57,9 @@ game
 
 ## Next Immediate Tasks
 
-1. **BowController.client.luau** — Mouse aim tracking, draw mechanic, power meter
-2. **ArrowFlight** — Server-side physics and hit detection
-3. **GameManager.server.luau** — Round lifecycle and scoring
+1. **DataManager.server.luau** — DataStore setup for player data persistence
+2. **Auto-save system** — Save on round end, load on join
+3. **XP and leveling** — Earn XP from scoring, level up rewards
 
 ---
 

@@ -14,21 +14,20 @@
 | Operational Structure | COMPLETE | _ops/, .claude/commands/ mirroring ATL |
 | **Phase 1: Foundation** | **COMPLETE** | Arena, target, folders, Config, Types, Remotes |
 | **Arena Visual Polish** | **COMPLETE** | Terrain, particles, torches, lighting, target glow |
-| **Phase 2: Core Mechanic** | **IN PROGRESS** | BowController, arrow flight, hit detection done |
-| Core Mechanic | IN PROGRESS | Round lifecycle pending |
+| **Phase 2: Core Mechanic** | **COMPLETE** | BowController, arrow flight, hit detection, round lifecycle |
+| **UI/HUD** | **COMPLETE** | Score display, arrows remaining, hit feedback, round summary |
 | Data Persistence | NOT STARTED | DataStore integration (Phase 3) |
 | Game Modes | NOT STARTED | Quick Match, Duel, Practice |
-| UI | NOT STARTED | HUD, results, menus (Phase 6) |
 
 ---
 
 ## Completed Work
 
-### 2026-03-25: Phase 2 Core Mechanic (Partial)
+### 2026-03-25: Phase 2 Core Mechanic (COMPLETE)
 
-**Status:** IN PROGRESS
+**Status:** COMPLETE
 
-Implemented bow controller and server-side arrow flight/hit detection:
+Implemented full bow controller, arrow flight, hit detection, round lifecycle, and HUD:
 
 **BowController.client.luau** (StarterPlayerScripts):
 | Feature | Implementation |
@@ -55,12 +54,25 @@ Implemented bow controller and server-side arrow flight/hit detection:
 - Server runs physics simulation independently
 - Server determines hit/score authoritatively
 
-**Playtest:** Zero errors, both scripts initialize correctly ✓
+**Round Lifecycle (GameManager.server.luau):**
+| Feature | Implementation |
+|---------|----------------|
+| PlayerRoundState | Type tracking arrows, score, round state per player |
+| 10 arrows per round | Configurable ARROWS_PER_ROUND constant |
+| Auto-start | Round begins on first fire for convenience |
+| Score accumulation | Running total + per-arrow score history |
+| Round end stats | Accuracy, bullseyes, best shot, total score |
 
-**Remaining for Phase 2:**
-- Round lifecycle (10 arrows per round)
-- Score accumulation and display
-- Round end summary
+**HUDController.client.luau** (StarterPlayerScripts):
+| Feature | Implementation |
+|---------|----------------|
+| Score display | Top-center HUD with gold score value |
+| Arrows remaining | X/10 format with color coding (blue→yellow→red) |
+| Hit feedback | Animated zone name + points, floats up and fades |
+| Round summary | Modal panel with stats: score, hits, bullseyes, accuracy, best shot |
+| Play Again | Button to start new round |
+
+**Playtest:** Zero errors, all three scripts initialize correctly ✓
 
 ---
 
