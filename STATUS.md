@@ -12,7 +12,7 @@
 |-----------|--------|----------|
 | Foundation | COMPLETE | Arena, target, Config, Types, Remotes |
 | Visual Polish | COMPLETE | Terrain, particles, torches, lighting |
-| Core Mechanic | IN PROGRESS | BowController next |
+| Core Mechanic | IN PROGRESS | BowController ✓, Arrow flight ✓, Hit detection ✓, Round lifecycle pending |
 | Data Persistence | NOT STARTED | — |
 | Game Modes | NOT STARTED | — |
 | UI/HUD | NOT STARTED | — |
@@ -45,8 +45,10 @@ game
 │   ├── Remotes/ (10 RemoteEvents + 2 RemoteFunctions)
 │   └── Assets/ (empty, for bow/arrow models)
 │
-├── ServerScriptService/ (empty, awaiting GameManager)
-├── StarterPlayerScripts/ (empty, awaiting BowController)
+├── ServerScriptService/
+│   └── GameManager.server.luau (arrow flight, hit detection, scoring)
+├── StarterPlayer/StarterPlayerScripts/
+│   └── BowController.client.luau (aim, draw, fire input)
 └── StarterGui/ (folders created: HUD, ShopGui, etc.)
 ```
 

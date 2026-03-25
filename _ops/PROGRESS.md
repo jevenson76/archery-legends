@@ -14,7 +14,8 @@
 | Operational Structure | COMPLETE | _ops/, .claude/commands/ mirroring ATL |
 | **Phase 1: Foundation** | **COMPLETE** | Arena, target, folders, Config, Types, Remotes |
 | **Arena Visual Polish** | **COMPLETE** | Terrain, particles, torches, lighting, target glow |
-| Core Mechanic | NOT STARTED | Aim, draw, release (Phase 2) |
+| **Phase 2: Core Mechanic** | **IN PROGRESS** | BowController, arrow flight, hit detection done |
+| Core Mechanic | IN PROGRESS | Round lifecycle pending |
 | Data Persistence | NOT STARTED | DataStore integration (Phase 3) |
 | Game Modes | NOT STARTED | Quick Match, Duel, Practice |
 | UI | NOT STARTED | HUD, results, menus (Phase 6) |
@@ -22,6 +23,46 @@
 ---
 
 ## Completed Work
+
+### 2026-03-25: Phase 2 Core Mechanic (Partial)
+
+**Status:** IN PROGRESS
+
+Implemented bow controller and server-side arrow flight/hit detection:
+
+**BowController.client.luau** (StarterPlayerScripts):
+| Feature | Implementation |
+|---------|----------------|
+| Mouse aim tracking | Camera ray through mouse position to world |
+| Draw mechanic | Hold LMB charges power 0-100% over 1.5s |
+| Power meter UI | Right-side vertical bar, green→yellow→red gradient |
+| Trajectory preview | 20-segment dotted arc showing predicted flight path |
+| Fire action | Sends direction + power to server via FireArrow remote |
+
+**GameManager.server.luau** (ServerScriptService):
+| Feature | Implementation |
+|---------|----------------|
+| Input validation | Rate limiting (0.5s cooldown), direction/power bounds check |
+| Arrow visual | Wooden shaft + metal tip + red fletching |
+| Physics simulation | Kinematic equation with gravity (196.2 studs/s²) |
+| Hit detection | Ray-plane intersection at target Z position |
+| Zone scoring | Distance from bullseye → zone lookup from Config |
+| Result feedback | ArrowResult remote sends hit/miss + zone + score to client |
+
+**Security Model:**
+- Client sends intent only (direction, power)
+- Server validates all inputs
+- Server runs physics simulation independently
+- Server determines hit/score authoritatively
+
+**Playtest:** Zero errors, both scripts initialize correctly ✓
+
+**Remaining for Phase 2:**
+- Round lifecycle (10 arrows per round)
+- Score accumulation and display
+- Round end summary
+
+---
 
 ### 2026-03-25: Arena Visual Polish (Full Roblox Stack)
 
@@ -143,3 +184,4 @@ Created operational documentation structure mirroring ATL project:
 | 2026-03-25 | Initial PROGRESS.md created |
 | 2026-03-25 | Operational structure (_ops/, .claude/) established |
 | 2026-03-25 | Arena visual polish complete (terrain, particles, torches, target glow) |
+| 2026-03-25 | Phase 2 core mechanic started (BowController, arrow flight, hit detection) |
