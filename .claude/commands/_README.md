@@ -15,6 +15,7 @@ This command establishes project context and must be run before any work begins.
 | Command | Description |
 |---------|-------------|
 | `/start-session` | Initialize session with project context and authority hierarchy |
+| `/wrap-up` | End-of-session wrap-up - summarizes work, updates PROGRESS.md and NEXT_STEPS.md |
 
 ---
 

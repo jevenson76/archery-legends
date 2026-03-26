@@ -533,12 +533,12 @@ No session should feel "done." Always leave a carrot dangling.
 - [x] Aim, draw, release bow
 - [x] Arrow physics (Casual + Normal difficulty)
 - [x] Hit detection with 4 scoring zones
-- [x] Visual/audio feedback on hit/miss
+- [ ] Visual/audio feedback on hit/miss (partial - audio requires manual setup)
 
 **Game Modes:**
 - [x] Quick Match (10 arrows, solo)
-- [x] 1v1 Duel (alternating turns, 5 arrows each)
-- [x] Practice Range (unlimited, no scoring)
+- [ ] 1v1 Duel (alternating turns, 5 arrows each)
+- [ ] Practice Range (unlimited, no scoring)
 
 **Progression:**
 - [x] XP and leveling (to 100)
@@ -552,7 +552,7 @@ No session should feel "done." Always leave a carrot dangling.
 **Content:**
 - [x] 1 Arena (Training Grounds)
 - [x] Default bow
-- [x] 2 difficulty levels (Casual, Normal)
+- [ ] 2 difficulty levels (Casual, Normal) — only Normal implemented
 
 **UI:**
 - [x] HUD (score, XP bar, difficulty indicator)

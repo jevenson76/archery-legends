@@ -4,191 +4,142 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Archery Legends** — A monetized, high-engagement archery game on Roblox. Solo developer build targeting top-chart retention metrics with cosmetic-first monetization.
+**Archery Legends** — A monetized Roblox archery game with cosmetic-first monetization and engagement-optimized retention mechanics.
 
-**Current Phase:** MVP (core mechanic, basic scoring, one arena, data persistence)
+| Attribute | Value |
+|-----------|-------|
+| Phase | MVP — Phase 6 (Game Modes) |
+| Engine | Roblox Studio + Luau |
+| MCP | robloxstudio-mcp (direct Studio manipulation) |
+| Code Location | **Roblox Studio** (not local files) |
 
-## Tech Stack
+## Quick Start
 
-- **Engine:** Roblox Studio + Luau (Roblox's Lua 5.1 derivative)
-- **MCP Integration:** robloxstudio-mcp (39+ tools for direct Studio manipulation)
-- **Persistence:** DataStore, OrderedDataStore for leaderboards
-- **Monetization:** MarketplaceService (cosmetic-only)
+```bash
+# 1. Start session (loads context, checks Studio connection)
+/start-session
+
+# 2. Current priorities are in:
+cat _ops/NEXT_STEPS.md
+```
+
+**Common MCP operations:**
+```
+get_place_info                          # Verify Studio connection
+get_project_structure scriptsOnly=true  # See all scripts
+get_script_source instancePath="game.ServerScriptService.GameManager"
+start_playtest mode="play"              # Test changes
+get_playtest_output                     # Check for errors
+stop_playtest                           # End test
+```
+
+## Architecture
+
+**All game logic lives in Roblox Studio.** Local files are documentation only.
+
+### Server Scripts (ServerScriptService)
+| Script | Responsibility |
+|--------|----------------|
+| GameManager | Round lifecycle, arrow physics, hit detection, scoring |
+| DataManager | DataStore persistence, XP/currency awards, level-ups |
+| DailyRewardManager | Streak tracking, reward distribution |
+| LeaderboardManager | OrderedDataStore rankings (daily/weekly/all-time) |
+| ShopManager | Purchase validation, inventory management |
+
+### Client Scripts (StarterPlayerScripts)
+| Script | Responsibility |
+|--------|----------------|
+| BowController | Aim, draw, release input; trajectory preview |
+| HUDController | Score, arrows, XP bar, round summary |
+| DailyRewardController | Claim UI, 7-day calendar |
+| LeaderboardController | Tab interface, top 50 display |
+| ShopController | Item grid, purchase/equip flow |
+
+### Shared Modules (ReplicatedStorage/Modules)
+| Module | Contents |
+|--------|----------|
+| Config | Constants: physics, scoring zones, XP curves, shop items, daily rewards |
+| Types | PlayerData type definition, GetDefaultPlayerData() |
+
+### Remotes (ReplicatedStorage/Remotes)
+Fire-and-forget: `FireArrow`, `ArrowResult`, `RoundEnd`, `DailyRewardStatus`, `LeaderboardUpdated`
+Request-response: `GetPlayerData`, `ClaimDailyReward`, `GetLeaderboard`, `GetShopData`, `PurchaseItem`, `EquipItem`
 
 ## Development Workflow
 
-**All game code lives in Roblox Studio, not local files.** Use MCP tools for all interactions.
-
 ```
-1. Inspect current state (get_script_source, get_project_structure)
-       ↓
-2. Write/edit code via MCP (set_script_source, edit_script_lines)
-       ↓
-3. Verify edit applied (get_script_source to confirm)
-       ↓
-4. Playtest (start_playtest → get_playtest_output → stop_playtest)
-       ↓
-5. Fix errors and re-test until clean
-       ↓
-6. Update _ops/PROGRESS.md
+Inspect → Edit → Verify → Playtest → Fix → Update PROGRESS.md
 ```
 
-## MCP Tools Reference
-
-**Inspect (read-only):**
-- `get_project_structure` — Full hierarchy tree
-- `get_script_source` — Read script code (use before/after edits)
-- `grep_scripts` — Search all scripts for patterns
-- `get_instance_properties` — Get instance configuration
-- `search_objects` — Find instances by name/class
-
-**Modify (write):**
-- `set_script_source` — Replace entire script (for new scripts)
-- `edit_script_lines` — Replace specific line range (for targeted fixes)
-- `insert_script_lines` — Add lines at position
-- `delete_script_lines` — Remove line range
-- `create_object` — Create new instance
-- `delete_object` — Remove instance
-- `set_property` / `mass_set_property` — Configure properties
-
-**Build Library:**
-- `generate_build` — Procedural build via JS code
-- `create_build` — Define build from part arrays
-- `import_build` — Place build in Studio
-- `list_library` — Browse saved builds
-
-**Test:**
-- `start_playtest` — Begin play mode ("play") or server-only ("run")
-- `get_playtest_output` — Poll logs for errors
-- `stop_playtest` — End playtest, get final output
-
-## Project Structure (Roblox Studio Hierarchy)
-```
-game
-├── ServerScriptService/
-│   ├── GameManager.server.luau        -- Round lifecycle, scoring
-│   ├── DataManager.server.luau        -- DataStore save/load
-│   ├── ShopManager.server.luau        -- Purchase processing
-│   └── LeaderboardManager.server.luau -- OrderedDataStore rankings
-├── ReplicatedStorage/
-│   ├── Modules/
-│   │   ├── Config.luau                -- Shared constants (XP curves, pricing)
-│   │   ├── ArrowPhysics.luau          -- Shared physics calculations
-│   │   └── Types.luau                 -- Type definitions
-│   ├── Remotes/                       -- RemoteEvents + RemoteFunctions
-│   └── Assets/                        -- Bow/arrow models, UI templates
-├── StarterPlayerScripts/
-│   ├── BowController.client.luau      -- Aim, draw, release input
-│   ├── CameraController.client.luau   -- Aim camera behavior
-│   └── UIController.client.luau       -- HUD, shop, progression UI
-├── StarterGui/
-│   ├── HUD/                           -- Score, XP bar, streak counter
-│   ├── ShopGui/                       -- Bow/arrow skin store
-│   ├── ProgressionGui/                -- Level, mastery, battle pass
-│   └── ResultsGui/                    -- End-of-round summary
-└── Workspace/
-    ├── Arenas/                        -- Playable maps
-    ├── Targets/                       -- Target objects with zones
-    └── SpawnLocations/
-```
+1. **Inspect:** Read current state with `get_script_source` before any edit
+2. **Edit:** Use `edit_script_lines` for targeted changes, `set_script_source` for new scripts
+3. **Verify:** ALWAYS `get_script_source` after edit to confirm it applied
+4. **Playtest:** `start_playtest` → poll `get_playtest_output` → `stop_playtest`
+5. **Fix:** Loop until zero errors. Never proceed with broken code.
+6. **Document:** Update `_ops/PROGRESS.md` after significant changes
 
 ## Luau Conventions
-- Use `local` for all variables. No globals.
-- Type annotations on function signatures: `function foo(bar: number): string`
-- `pcall()` wraps every DataStore and HTTP call. Always handle failure.
-- Server scripts end in `.server.luau`, client in `.client.luau`, modules in `.luau`
-- RemoteEvents for fire-and-forget, RemoteFunctions only when server→client return is needed
-- Never trust client input. Validate and sanitize everything server-side.
-- Use `task.spawn()` and `task.wait()` instead of deprecated `spawn()` and `wait()`
+
+- `local` for all variables (no globals)
+- Type annotations: `function foo(bar: number): string`
+- `pcall()` wraps DataStore/HTTP calls
+- File suffixes: `.server.luau`, `.client.luau`, `.luau` (modules)
+- `task.spawn()` / `task.wait()` (not deprecated `spawn()` / `wait()`)
+- RemoteEvents for fire-and-forget, RemoteFunctions only when return needed
 
 ## Security Model
-- All currency, XP, inventory, and progression logic runs on SERVER only
-- Client sends intent ("I released the arrow at angle X, power Y"), server validates and processes
-- Server calculates hit detection and scoring, sends result back to client
-- RemoteEvent rate limiting: ignore client fires faster than 1 per 0.5 seconds
-- DataStore writes throttled with debounce (save on round-end, not every action)
+
+| Rule | Implementation |
+|------|----------------|
+| Server-authoritative | All currency, XP, inventory logic on server |
+| Client sends intent | Direction + power only, never scores |
+| Input validation | Bounds check, type check, sanitize all remotes |
+| Rate limiting | 0.5s cooldown per remote fire |
+| DataStore throttle | Debounced saves (6s min), save on round-end |
+
+## Work Order (Mandatory)
+
+```
+Core mechanics → Security → Persistence → Progression → Monetization → UI
+```
+
+**Phases 1-5 complete.** Current: Game Modes (Duel, Practice, Game Passes)
 
 ## Monetization Rules
-- Cosmetic-only purchases. Zero gameplay advantages for Robux.
-- Game Passes (one-time): VIP (2x XP + chat tag), Radio, Double Currency
-- Developer Products (repeatable): Arrow trails, bow skins, emotes, target skins
-- No direct loot box purchases. Randomized rewards are earn-only through gameplay.
-- Receipt processing via MarketplaceService.ProcessReceipt with proper idempotency
 
-## Engagement Systems to Implement
-- Daily login rewards with escalating streak bonuses (reset on miss)
-- Weekly challenge rotation (3 active, refreshes Monday)
-- Season/battle pass: free + premium track, 30-day seasons
-- Roblox badges at milestones (first game, 100 bullseyes, level 10, etc.)
-- Leaderboards: daily, weekly, all-time, friends-only
-- Post-match screen: always show XP gained, progress to next unlock, "Play Again" prominent
-- First session: player hits a bullseye within 30 seconds (tutorial), gets free cosmetic within 60s
-
-## Work Order
-
-Always work in this order (per PROJECT_OPERATING_MODEL.md):
-
-```
-1. Core mechanics (shooting, scoring)
-       ↓
-2. Server security (validation, anti-cheat)
-       ↓
-3. Data persistence (DataStore)
-       ↓
-4. Progression systems (XP, levels)
-       ↓
-5. Monetization hooks
-       ↓
-6. UI polish (LAST)
-```
-
-**If a task attempts UI before core mechanics are stable, redirect to core work first.**
+- **Cosmetic-only.** Zero gameplay advantages for Robux.
+- Game Passes: VIP (2x XP), Double Currency, Radio
+- Developer Products: Bow skins, arrow trails, emotes
+- Receipt processing via `MarketplaceService.ProcessReceipt` with idempotency
 
 ## Verification Checklist
 
-Before marking any script task complete:
+Before marking any task complete:
 
-1. `get_script_source` — Confirm edit applied correctly
-2. `start_playtest` — No syntax errors
-3. `get_playtest_output` — No runtime errors
-4. Feature works as intended
-5. `stop_playtest` — Clean exit
+- [ ] `get_script_source` confirms edit applied
+- [ ] `start_playtest` — no syntax errors
+- [ ] `get_playtest_output` — no runtime errors
+- [ ] Feature works as intended
+- [ ] `stop_playtest` — clean exit
 
-**Never proceed to next task with broken/erroring code.**
-
-## Local File Structure
+## Local Files
 
 ```
-/home/jevenson/dev/_pet_projects/roblox/
-├── CLAUDE.md                -- This file
-├── _ops/                    -- Operational tracking
-│   ├── BOOT.md              -- Document authority hierarchy
-│   ├── PROJECT_OPERATING_MODEL.md -- What this project is
-│   ├── PROJECT_IDENTITY.md  -- Project context & scope
-│   ├── PROGRESS.md          -- Completed work log
-│   └── NEXT_STEPS.md        -- Current priorities
-├── docs/
-│   ├── game-design-document.md  -- Full GDD
-│   ├── engagement-psychology.md -- Retention mechanics
-│   └── mvp-task-list.md         -- 20-day phased build plan
-└── .claude/
-    ├── commands/            -- Slash commands (/start-session)
-    └── skills/              -- Development skills
+_ops/PROGRESS.md      # Completed work log (update after changes)
+_ops/NEXT_STEPS.md    # Current priorities
+docs/game-design-document.md  # Full GDD with mechanics, modes, monetization
+docs/engagement-psychology.md # Retention mechanics design
 ```
 
-## Session Protocol
+## Troubleshooting
 
-1. Run `/start-session` to initialize context
-2. Check `_ops/NEXT_STEPS.md` for current priority
-3. Verify Studio connection via `get_place_info`
-4. Work in MCP loop (inspect → edit → verify → playtest → fix)
-5. Update `_ops/PROGRESS.md` after significant changes
+| Issue | Fix |
+|-------|-----|
+| MCP not connecting | Check Roblox Studio running, MCP plugin active |
+| DataStore errors in playtest | Enable "Studio Access to API Services" in Game Settings → Security |
+| Script not updating | Use `get_script_source` to verify, check instancePath |
+| Playtest hangs | `stop_playtest`, check for infinite loops |
 
-## Reference Documents
+## Skills Reference
 
-| Document | Purpose |
-|----------|---------|
-| `_ops/PROGRESS.md` | WHERE we are |
-| `_ops/NEXT_STEPS.md` | WHERE we go next |
-| `docs/game-design-document.md` | WHAT to build |
-| `docs/engagement-psychology.md` | WHY we build it |
+For detailed MCP tool documentation, patterns, and examples, invoke the `roblox-studio-expert` skill.

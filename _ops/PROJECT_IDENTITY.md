@@ -210,20 +210,21 @@ game
 ```
 /home/jevenson/dev/_pet_projects/roblox/
 ├── CLAUDE.md                  -- Tech stack, conventions, verification
+├── STATUS.md                  -- Quick project status
 ├── _ops/                      -- Operational tracking
 │   ├── BOOT.md               -- Document hierarchy
 │   ├── PROJECT_OPERATING_MODEL.md
 │   ├── PROJECT_IDENTITY.md   -- This file
 │   ├── PROGRESS.md           -- Completed work
 │   ├── NEXT_STEPS.md         -- Priorities
-│   ├── runbooks/             -- Execution procedures
-│   └── staging/              -- Temporary data
+│   └── MANUAL_STEPS.md       -- Tasks requiring manual Studio action
 ├── docs/
 │   ├── game-design-document.md   -- Full GDD
 │   ├── engagement-psychology.md  -- Retention mechanics
 │   └── mvp-task-list.md          -- Phase breakdown
-├── builds/                    -- MCP build library exports
-└── mcp-servers/               -- MCP server configuration
+└── .claude/
+    ├── commands/              -- Slash commands (/start-session)
+    └── skills/                -- Development skills (4 Roblox skills)
 ```
 
 ---

@@ -23,8 +23,8 @@ Tracks completed work and current state.
 ### 5. NEXT_STEPS.md
 Defines immediate priorities and blockers.
 
-### 6. RUNBOOKS/
-Defines execution procedures for common operations.
+### 6. MANUAL_STEPS.md
+Tracks tasks requiring manual Studio action (audio, Game Settings).
 
 ---
 

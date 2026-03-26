@@ -41,13 +41,15 @@
 
 **Note:** This only affects local Studio testing. Published games always have DataStore access.
 
-**Status:** PENDING
+**Status:** ✅ COMPLETE (2026-03-26) — Verified working in playtest
 
 ---
 
 ## Completed Manual Steps
 
-(None yet)
+### ✅ Enable Studio DataStore Access
+**Completed:** 2026-03-26
+**Verification:** Playtest shows zero DataStore errors, persistence working
 
 ---
 
