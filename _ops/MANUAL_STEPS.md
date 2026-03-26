@@ -28,6 +28,23 @@
 
 ---
 
+### 2. Enable Studio DataStore Access (Priority: High)
+
+**Reason:** DataStore API is disabled by default in Studio for security. Must be enabled to test data persistence locally.
+
+**Steps:**
+1. Open Roblox Studio
+2. Go to **Game Settings** (Home tab → Game Settings)
+3. Navigate to **Security** tab
+4. Enable **"Enable Studio Access to API Services"**
+5. Click **Save**
+
+**Note:** This only affects local Studio testing. Published games always have DataStore access.
+
+**Status:** PENDING
+
+---
+
 ## Completed Manual Steps
 
 (None yet)
@@ -47,3 +64,4 @@
 | Date | Change |
 |------|--------|
 | 2026-03-25 | Initial MANUAL_STEPS.md created |
+| 2026-03-26 | Added DataStore API access step |

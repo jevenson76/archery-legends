@@ -1,6 +1,6 @@
 # Archery Legends Progress Log
 
-**Last Updated:** 2026-03-25
+**Last Updated:** 2026-03-26
 **Project:** Archery Legends (Roblox Archery Game)
 **Phase:** MVP Development
 
@@ -15,13 +15,47 @@
 | **Phase 1: Foundation** | **COMPLETE** | Arena, target, folders, Config, Types, Remotes |
 | **Arena Visual Polish** | **COMPLETE** | Terrain, particles, torches, lighting, target glow |
 | **Phase 2: Core Mechanic** | **COMPLETE** | BowController, arrow flight, hit detection, round lifecycle |
-| **UI/HUD** | **COMPLETE** | Score display, arrows remaining, hit feedback, round summary |
-| Data Persistence | NOT STARTED | DataStore integration (Phase 3) |
+| **UI/HUD** | **COMPLETE** | Score, arrows, hit feedback, round summary, XP/currency |
+| **Phase 3: Data Persistence** | **COMPLETE** | DataManager, auto-save, XP/currency awards |
 | Game Modes | NOT STARTED | Quick Match, Duel, Practice |
 
 ---
 
 ## Completed Work
+
+### 2026-03-26: Phase 3 Data Persistence (COMPLETE)
+
+**Status:** COMPLETE
+
+Implemented DataStore persistence with XP/currency progression:
+
+**DataManager.server.luau** (ServerScriptService):
+| Feature | Implementation |
+|---------|----------------|
+| DataStore setup | ArcheryLegends_PlayerData_v1 store with versioning |
+| Load with retry | 3 attempts with 1s delay, pcall wrapped |
+| Auto-save | Debounced (6s min), save on round end + player leave |
+| XP progression | Config-driven level curve (100 * level^1.5) |
+| Currency awards | Score-based earnings (0.2 per point) |
+| BindToClose | Server shutdown saves all players |
+
+**GameManager Integration:**
+- Calls DataManager.UpdateRoundStats on round end
+- Awards XP: BaseXP + (bullseyes × 10) + (score / 2)
+- Awards currency: score × 0.2
+- Tracks level ups and sends to client
+
+**HUDController Updates:**
+- Displays XP earned in round summary
+- Displays currency earned in round summary
+- Shows level up notification with new level
+- Color-coded progression stats
+
+**Manual Step Required:** Enable "Studio Access to API Services" in Game Settings → Security
+
+**Playtest:** Zero errors, all four scripts initialize correctly ✓
+
+---
 
 ### 2026-03-25: Phase 2 Core Mechanic (COMPLETE)
 

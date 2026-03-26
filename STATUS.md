@@ -1,7 +1,7 @@
 # Archery Legends — Project Status
 
-**Last Updated:** 2026-03-25
-**Current Phase:** MVP — Phase 2 COMPLETE, Ready for Phase 3: Data Persistence
+**Last Updated:** 2026-03-26
+**Current Phase:** MVP — Phase 3 COMPLETE, Ready for Phase 4: Progression
 **Playtest Status:** PASSING (zero errors)
 
 ---
@@ -13,8 +13,8 @@
 | Foundation | COMPLETE | Arena, target, Config, Types, Remotes |
 | Visual Polish | COMPLETE | Terrain, particles, torches, lighting |
 | Core Mechanic | COMPLETE | BowController ✓, Arrow flight ✓, Hit detection ✓, Round lifecycle ✓ |
-| UI/HUD | COMPLETE | Score display, arrows remaining, hit feedback, round summary |
-| Data Persistence | NOT STARTED | — |
+| UI/HUD | COMPLETE | Score, arrows, hit feedback, round summary, XP/currency display |
+| Data Persistence | COMPLETE | DataManager ✓, Auto-save ✓, XP/Currency awards ✓ |
 | Game Modes | NOT STARTED | — |
 
 ---
@@ -46,10 +46,11 @@ game
 │   └── Assets/ (empty, for bow/arrow models)
 │
 ├── ServerScriptService/
-│   └── GameManager.server.luau (arrow flight, hit detection, scoring)
+│   ├── GameManager.server.luau (rounds, arrow flight, hit detection, scoring)
+│   └── DataManager.server.luau (DataStore, XP, currency, persistence)
 ├── StarterPlayer/StarterPlayerScripts/
 │   ├── BowController.client.luau (aim, draw, fire input)
-│   └── HUDController.client.luau (score, arrows, feedback, round summary)
+│   └── HUDController.client.luau (score, arrows, feedback, XP/currency)
 └── StarterGui/ (folders created: HUD, ShopGui, etc.)
 ```
 
@@ -57,9 +58,9 @@ game
 
 ## Next Immediate Tasks
 
-1. **DataManager.server.luau** — DataStore setup for player data persistence
-2. **Auto-save system** — Save on round end, load on join
-3. **XP and leveling** — Earn XP from scoring, level up rewards
+1. **Daily Rewards** — Login rewards with streak tracking
+2. **Leaderboards** — OrderedDataStore for rankings
+3. **XP Bar in HUD** — Show current XP progress to next level
 
 ---
 
@@ -67,7 +68,9 @@ game
 
 See `_ops/MANUAL_STEPS.md` for tasks requiring manual Studio action.
 
-**Current:** Add ambient audio via Studio Audio Library
+**Current:**
+- Enable Studio DataStore Access (Game Settings → Security)
+- Add ambient audio via Studio Audio Library
 
 ---
 
