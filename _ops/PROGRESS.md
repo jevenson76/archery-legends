@@ -18,11 +18,71 @@
 | **UI/HUD** | **COMPLETE** | Score, arrows, hit feedback, round summary, XP/currency |
 | **Phase 3: Data Persistence** | **COMPLETE** | DataManager, auto-save, XP/currency awards |
 | **Phase 4: Progression** | **COMPLETE** | XP bar, daily rewards, leaderboards |
+| **Phase 5: Monetization/UI** | **COMPLETE** | Daily Reward UI, Leaderboard UI, Shop system |
 | Game Modes | NOT STARTED | Quick Match, Duel, Practice |
 
 ---
 
 ## Completed Work
+
+### 2026-03-26: Phase 5 Monetization & UI Polish (COMPLETE)
+
+**Status:** COMPLETE
+
+Implemented all Phase 5 UI systems and shop functionality:
+
+**DailyRewardController.client.luau** (StarterPlayerScripts):
+| Feature | Implementation |
+|---------|----------------|
+| 7-day calendar grid | Visual representation of weekly rewards |
+| Streak display | "Day X of 7" progress indicator |
+| Claim button | Pulsing animation when reward available |
+| Auto-show on login | Popup appears if reward unclaimed |
+| Server integration | ClaimDailyReward RemoteFunction |
+
+**LeaderboardController.client.luau** (StarterPlayerScripts):
+| Feature | Implementation |
+|---------|----------------|
+| Tab interface | Daily/Weekly/AllTime toggle buttons |
+| Top 50 display | Scrolling list with rank, name, score |
+| Medal indicators | Gold/Silver/Bronze for top 3 |
+| Current player highlight | Yellow highlight for local player |
+| Auto-refresh | Updates every 60 seconds |
+| Toggle hotkey | Press L to show/hide |
+
+**ShopManager.server.luau** (ServerScriptService):
+| Feature | Implementation |
+|---------|----------------|
+| GetShopData | Returns catalog with ownership status |
+| PurchaseItem | Validates currency, grants item, saves |
+| EquipItem | Updates equipped bow/trail |
+| DataManager integration | Uses _G.DataManager for persistence |
+
+**ShopController.client.luau** (StarterPlayerScripts):
+| Feature | Implementation |
+|---------|----------------|
+| Tabbed interface | Bow Skins / Arrow Trails tabs |
+| Item grid | Cards with name, price, owned/equipped status |
+| Buy/Equip buttons | Context-aware action buttons |
+| Currency display | Shows current balance, updates on purchase |
+| Toggle hotkey | Press B to show/hide |
+
+**Config.luau Updates:**
+- Added ShopItems catalog (6 bow skins, 5 arrow trails)
+- Prices range from free to 1000 currency
+
+**Types.luau Updates:**
+- Added OwnedItems field (flat array of item IDs)
+- Default equipped items: bow_default, trail_none
+
+**New Remotes:**
+- GetShopData (RemoteFunction)
+- PurchaseItem (RemoteFunction)
+- EquipItem (RemoteFunction)
+
+**Playtest:** Zero errors, all 10 scripts initialize correctly ✓
+
+---
 
 ### 2026-03-26: Phase 4 Progression Systems (COMPLETE)
 
@@ -278,3 +338,4 @@ Created operational documentation structure mirroring ATL project:
 | 2026-03-25 | Operational structure (_ops/, .claude/) established |
 | 2026-03-25 | Arena visual polish complete (terrain, particles, torches, target glow) |
 | 2026-03-25 | Phase 2 core mechanic started (BowController, arrow flight, hit detection) |
+| 2026-03-26 | Phase 5 complete (Daily Reward UI, Leaderboard UI, Shop system) |
