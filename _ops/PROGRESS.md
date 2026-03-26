@@ -17,11 +17,58 @@
 | **Phase 2: Core Mechanic** | **COMPLETE** | BowController, arrow flight, hit detection, round lifecycle |
 | **UI/HUD** | **COMPLETE** | Score, arrows, hit feedback, round summary, XP/currency |
 | **Phase 3: Data Persistence** | **COMPLETE** | DataManager, auto-save, XP/currency awards |
+| **Phase 4: Progression** | **COMPLETE** | XP bar, daily rewards, leaderboards |
 | Game Modes | NOT STARTED | Quick Match, Duel, Practice |
 
 ---
 
 ## Completed Work
+
+### 2026-03-26: Phase 4 Progression Systems (COMPLETE)
+
+**Status:** COMPLETE
+
+Implemented XP bar, daily rewards, and leaderboard systems:
+
+**XP Bar (HUDController.client.luau):**
+| Feature | Implementation |
+|---------|----------------|
+| XP bar UI | Below main HUD, 300px wide with gradient fill |
+| Level display | "Lv N" label on left side |
+| XP text | "current / required" format on right |
+| Animation | TweenService smooth fill on XP gain |
+| Server sync | Uses server-provided level/XP data |
+
+**DailyRewardManager.server.luau** (ServerScriptService):
+| Feature | Implementation |
+|---------|----------------|
+| Date tracking | YYYY-MM-DD format for day comparison |
+| Streak system | Consecutive days tracked, resets if >1 day missed |
+| 7-day cycle | Escalating rewards from Config.DailyRewards |
+| Reward types | Currency, Item, Chest with streak multiplier |
+| Auto-check | Sends DailyRewardStatus to client on join |
+
+**LeaderboardManager.server.luau** (ServerScriptService):
+| Feature | Implementation |
+|---------|----------------|
+| OrderedDataStore | Separate stores for Daily, Weekly, AllTime |
+| Date-keyed stores | Daily_2026-03-26, Weekly_2026-W13 format |
+| Auto-submit | Scores submitted after each round via GameManager |
+| Top 50 retrieval | GetSortedAsync with player name lookup |
+| Remote handlers | GetLeaderboard (RemoteFunction) for client queries |
+
+**Config Updates:**
+- Added Config.Leaderboards with DisplayCount, Types, RefreshInterval
+
+**New Remotes:**
+- ClaimDailyReward (RemoteFunction)
+- DailyRewardStatus (RemoteEvent)
+- GetLeaderboard (RemoteFunction)
+- LeaderboardUpdated (RemoteEvent)
+
+**Playtest:** Zero errors, all six scripts initialize correctly ✓
+
+---
 
 ### 2026-03-26: Phase 3 Data Persistence (COMPLETE)
 

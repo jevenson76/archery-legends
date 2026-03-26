@@ -1,45 +1,43 @@
 # Archery Legends Next Steps
 
-**Last Updated:** 2026-03-25
-**Current Phase:** MVP — Phase 3: Data Persistence
+**Last Updated:** 2026-03-26
+**Current Phase:** MVP — Phase 5: Monetization / UI Polish
 
 ---
 
 ## Immediate Priority
 
-### 1. DataStore Setup (Day 7)
+### 1. Daily Reward UI (Client)
 
-Create `ServerScriptService/DataManager.server.luau`:
-
-**Deliverables:**
-- [ ] GetDataStore for player data
-- [ ] Load player data on join (with retry logic)
-- [ ] Default data initialization from Types.GetDefaultPlayerData()
-- [ ] pcall wrapping for all DataStore operations
-
-**MCP Workflow:**
-```
-create_object (Script) → set_script_source → start_playtest → verify loads
-```
-
-### 2. Auto-Save System (Day 8)
-
-Extend DataManager with save logic:
+Create popup for claiming daily rewards:
 
 **Deliverables:**
-- [ ] Save on round end (via RoundEnd event)
-- [ ] Save on player leaving (PlayerRemoving)
-- [ ] Debounced saves (no more than 1 per 6 seconds)
-- [ ] BindToClose for server shutdown saves
+- [ ] Modal popup in StarterGui/DailyRewardGui
+- [ ] 7-day calendar grid showing reward progression
+- [ ] Claim button with pulse animation
+- [ ] Connect to ClaimDailyReward RemoteFunction
+- [ ] Show on login if reward available
 
-### 3. XP and Leveling
+### 2. Leaderboard UI (Client)
 
-Connect scoring to progression:
+Create leaderboard display:
 
 **Deliverables:**
-- [ ] Award XP based on score (from Config.PROGRESSION.XP_PER_POINT)
-- [ ] Level up detection with reward grants
-- [ ] Update HUD to show XP bar and level
+- [ ] Tab interface for Daily/Weekly/AllTime
+- [ ] Scrolling list of top 50 players
+- [ ] Highlight current player's rank
+- [ ] Connect to GetLeaderboard RemoteFunction
+- [ ] Auto-refresh every 60 seconds
+
+### 3. Shop System (Server + Client)
+
+Create cosmetic shop:
+
+**Deliverables:**
+- [ ] ShopManager.server.luau for purchase processing
+- [ ] MarketplaceService integration
+- [ ] Bow skins, arrow trails, emotes inventory
+- [ ] Shop UI in StarterGui/ShopGui
 
 ---
 
@@ -69,25 +67,46 @@ Connect scoring to progression:
 | HUD (score, arrows, feedback) | ✓ |
 | Round End Summary | ✓ |
 
+### Phase 3: Data Persistence ✓
+
+| Task | Status |
+|------|--------|
+| DataManager with DataStore | ✓ |
+| Load/save with retry logic | ✓ |
+| Auto-save on round end | ✓ |
+| XP/Currency awards | ✓ |
+| BindToClose for shutdown | ✓ |
+
+### Phase 4: Progression ✓
+
+| Task | Status |
+|------|--------|
+| XP bar in HUD with animation | ✓ |
+| DailyRewardManager (server) | ✓ |
+| Streak tracking with reset | ✓ |
+| LeaderboardManager (OrderedDataStore) | ✓ |
+| Daily/Weekly/AllTime rankings | ✓ |
+
 ---
 
 ## Pending Implementation (per mvp-task-list.md)
 
-### Phase 3: Data Persistence (Days 7-8)
+### Phase 5: Monetization (Days 11-12)
 
 | Task | Status | Reference |
 |------|--------|-----------|
-| DataStore Setup | PENDING | Day 7 |
-| Auto-Save & Session Persistence | PENDING | Day 8 |
+| Shop System | PENDING | Day 11 |
+| Game Passes | PENDING | Day 12 |
 
-### Phase 4: Progression (Days 9-10)
+### Phase 6: Polish & Game Modes (Days 13-16)
 
 | Task | Status | Reference |
 |------|--------|-----------|
-| XP & Level System | PENDING | Day 9 |
-| Currency & Unlocks | PENDING | Day 10 |
+| Daily Reward UI | PENDING | Day 13 |
+| Leaderboard UI | PENDING | Day 14 |
+| 1v1 Duel Mode | PENDING | Day 15-16 |
 
-### Phase 5-7: See mvp-task-list.md
+### Phase 7: See mvp-task-list.md
 
 Full 20-day plan in `docs/mvp-task-list.md`
 
@@ -102,31 +121,34 @@ Per PROJECT_OPERATING_MODEL.md, always work in this order:
        ↓
 2. Server security (validation, anti-cheat) → COMPLETE ✓
        ↓
-3. Data persistence (DataStore) → CURRENT
+3. Data persistence (DataStore) → COMPLETE ✓
        ↓
-4. Progression systems (XP, levels) → PENDING
+4. Progression systems (XP, levels) → COMPLETE ✓
        ↓
-5. Monetization hooks → DEFERRED (post-MVP)
+5. Monetization hooks → CURRENT
        ↓
-6. UI polish (LAST) → Basic HUD done, polish pending
+6. UI polish (LAST) → Basic HUD done, progression UI pending
 ```
 
 ---
 
 ## Blockers
 
-None currently. Phase 2 complete, ready for DataStore integration.
+None currently. Phase 4 complete, ready for UI polish and monetization.
 
 ---
 
 ## Definition of Done (MVP)
 
 1. [x] Player can join, hit target, earn score ✓
-2. [ ] Player can play Quick Match (round system in place, needs persistence)
-3. [ ] XP, level, currency, and stats persist across sessions
-4. [ ] Daily rewards work with streak tracking
-5. [ ] Leaderboards display top 50 for daily/weekly/all-time
+2. [x] Player can play Quick Match (round system with persistence) ✓
+3. [x] XP, level, currency, and stats persist across sessions ✓
+4. [x] Daily rewards work with streak tracking (server-side) ✓
+5. [x] Leaderboards store top scores for daily/weekly/all-time ✓
 6. [x] Zero critical errors in playtest output ✓
+7. [ ] Daily reward UI allows claiming rewards
+8. [ ] Leaderboard UI displays top 50 players
+9. [ ] Shop allows cosmetic purchases
 
 ---
 
@@ -136,3 +158,4 @@ None currently. Phase 2 complete, ready for DataStore integration.
 |------|--------|
 | 2026-03-25 | Initial NEXT_STEPS.md created |
 | 2026-03-25 | Updated for Phase 2 completion, Phase 3 priorities |
+| 2026-03-26 | Phase 3 & 4 complete, updated for Phase 5 (Monetization/UI) |
