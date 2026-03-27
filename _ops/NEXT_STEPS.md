@@ -1,161 +1,81 @@
 # Archery Legends Next Steps
 
-**Last Updated:** 2026-03-26
-**Current Phase:** MVP — Phase 6: Game Modes & Game Passes
+**Last Updated:** 2026-03-27
+**Current Phase:** Post-MVP — AAA Visual Overhaul
 
 ---
 
 ## Immediate Priority
 
-### 1. 1v1 Duel Mode
+### 1. First-Person Bow (Part 6 of 10-part overhaul) — DESIGN APPROVED
 
-Create competitive multiplayer mode:
+Add visible bow model during gameplay using ViewportFrame in BowController.
 
-**Deliverables:**
-- [ ] DuelManager.server.luau for matchmaking
-- [ ] Alternating turns (5 arrows each)
-- [ ] Side-by-side dual targets
-- [ ] Real-time score comparison
-- [ ] Winner/loser results screen
-
-### 2. Game Passes (MarketplaceService)
-
-Implement premium monetization:
+**Approach:** ViewportFrame + detailed 8-10 part model, built into BowController.
 
 **Deliverables:**
-- [ ] VIP Pass: 2x XP + chat tag
-- [ ] Double Currency Pass
-- [ ] Radio Pass: play custom audio
-- [ ] ProcessReceipt handling with idempotency
+- [ ] ViewportFrame in BowUI ScreenGui (bottom-center, 30%x40%)
+- [ ] Detailed bow model: ornate limbs with grain, wrapped grip, visible string (Beam), nocked arrow with fletching
+- [ ] Camera angle for first-person perspective
+- [ ] Draw animation (string pulls back proportional to `currentPower`)
+- [ ] Skin recoloring from Config.ShopItems.BowSkins Color property
+- [ ] Trail effect on nocked arrow when equipped
 
-### 3. Practice Mode
+**Resume point:** Design decided, ready to implement. User chose option B (detailed/ornate).
 
-Unlimited training mode:
+### 2. UI Polish Pass
+- [ ] Fine-tune button order (STORE, LEADERBOARD, PRACTICE)
+- [ ] Style Find Duel button to match green theme
+- [ ] Test all popups (shop, leaderboard, daily rewards) with new button wiring
+- [ ] Mobile viewport testing
 
-**Deliverables:**
-- [ ] No arrow limit
-- [ ] No score persistence
-- [ ] "Practice" indicator in HUD
-- [ ] Quick exit to ranked play
-
----
-
-## Completed Phases
-
-### Phase 1: Foundation ✓
-
-| Task | Status |
-|------|--------|
-| Arena ground plane (100x100 studs) | ✓ |
-| Firing line marker + SpawnLocation | ✓ |
-| Target with 4 scoring zones at 30 studs | ✓ |
-| Config.luau with all constants | ✓ |
-| Types.luau with PlayerData type | ✓ |
-| All RemoteEvents/Functions | ✓ |
-| Folder structure | ✓ |
-| Playtest verification | ✓ |
-
-### Phase 2: Core Mechanic ✓
-
-| Task | Status |
-|------|--------|
-| Bow Controller — Input & Aim | ✓ |
-| Arrow Flight & Server Communication | ✓ |
-| Hit Detection & Scoring | ✓ |
-| Round Lifecycle (10 arrows) | ✓ |
-| HUD (score, arrows, feedback) | ✓ |
-| Round End Summary | ✓ |
-
-### Phase 3: Data Persistence ✓
-
-| Task | Status |
-|------|--------|
-| DataManager with DataStore | ✓ |
-| Load/save with retry logic | ✓ |
-| Auto-save on round end | ✓ |
-| XP/Currency awards | ✓ |
-| BindToClose for shutdown | ✓ |
-
-### Phase 4: Progression ✓
-
-| Task | Status |
-|------|--------|
-| XP bar in HUD with animation | ✓ |
-| DailyRewardManager (server) | ✓ |
-| Streak tracking with reset | ✓ |
-| LeaderboardManager (OrderedDataStore) | ✓ |
-| Daily/Weekly/AllTime rankings | ✓ |
-
-### Phase 5: Monetization / UI Polish ✓
-
-| Task | Status |
-|------|--------|
-| Daily Reward UI (7-day calendar, claim popup) | ✓ |
-| Leaderboard UI (tabs, top 50, auto-refresh) | ✓ |
-| ShopManager (purchase processing, ownership) | ✓ |
-| ShopController (bow skins, arrow trails) | ✓ |
-| Config.ShopItems catalog | ✓ |
-| Types.OwnedItems field | ✓ |
+### 3. Sound Assets
+- [ ] Replace placeholder `rbxassetid://0` with real Roblox Audio Library assets
+- [ ] 16 punchy sounds per audio design doc
 
 ---
 
-## Pending Implementation (per mvp-task-list.md)
+## Completed (This Session)
 
-### Phase 6: Game Modes (Days 15-16)
+### 10-Part AAA Visual Overhaul (9/10 complete)
 
-| Task | Status | Reference |
-|------|--------|-----------|
-| 1v1 Duel Mode | PENDING | Day 15-16 |
-| Practice Mode | PENDING | Day 16 |
-| Game Passes | PENDING | Day 12 |
+| Part | Status | Description |
+|------|--------|-------------|
+| 1. Ground | DONE | Green grass material |
+| 2. Banner | DONE | Wooden gate archway + "Archery Legends" sign |
+| 3. HUD | DONE | Full info panel (streak, score, level, arrows, arrow type) |
+| 4. Range Data | DONE | Bottom-right panel (distance, wind) |
+| 5. Buttons | DONE | Icon+text labels (STORE, LEADERBOARD, PRACTICE) |
+| 6. First-Person Bow | PENDING | ViewportFrame bow model |
+| 7. Forest | DONE | 179 trees + 40 bushes, varied heights |
+| 8. Lake | DONE | Large lake with dock, lily pads |
+| 9. Lane Fencing | DONE | Split-rail wooden fence |
+| 10. Atmosphere | DONE | Golden hour, campfire, haze, bloom, sun rays |
 
-### Phase 7: See mvp-task-list.md
-
-Full 20-day plan in `docs/mvp-task-list.md`
-
----
-
-## Work Order Reminder
-
-Per PROJECT_OPERATING_MODEL.md, always work in this order:
-
-```
-1. Core mechanics (shooting, scoring)  → COMPLETE ✓
-       ↓
-2. Server security (validation, anti-cheat) → COMPLETE ✓
-       ↓
-3. Data persistence (DataStore) → COMPLETE ✓
-       ↓
-4. Progression systems (XP, levels) → COMPLETE ✓
-       ↓
-5. Monetization hooks → COMPLETE ✓ (Shop, currency system)
-       ↓
-6. UI polish → COMPLETE ✓ (Daily rewards, leaderboard, shop UI)
-       ↓
-7. Game modes → CURRENT (Duel, Practice, Game Passes)
-```
+### Key fixes:
+- Target glow removed (8 SurfaceLights + 1 SpotLight)
+- Banner SurfaceGui face corrected (Front, not Back)
+- HUDButtonBar refactored to callback-only registry
+- MCP stale process cleanup documented
 
 ---
 
-## Blockers
+## Previously Completed Phases
 
-None currently. Phase 5 complete, ready for game modes.
+- Phase 1: Foundation (arena, target, config, types, remotes)
+- Phase 2: Core Mechanic (bow, arrows, hit detection, rounds)
+- Phase 3: Data Persistence (DataStore, XP/currency)
+- Phase 4: Progression (XP bar, daily rewards, leaderboards)
+- Phase 5: Monetization/UI (shop, daily reward UI, leaderboard UI)
+- Phase 6: Game Modes (Quick Match, Practice, Duel, Game Passes)
 
 ---
 
-## Definition of Done (MVP)
-
-1. [x] Player can join, hit target, earn score ✓
-2. [x] Player can play Quick Match (round system with persistence) ✓
-3. [x] XP, level, currency, and stats persist across sessions ✓
-4. [x] Daily rewards work with streak tracking (server-side) ✓
-5. [x] Leaderboards store top scores for daily/weekly/all-time ✓
-6. [x] Zero critical errors in playtest output ✓
-7. [x] Daily reward UI allows claiming rewards ✓
-8. [x] Leaderboard UI displays top 50 players ✓
-9. [x] Shop allows cosmetic purchases ✓
-10. [ ] 1v1 Duel mode allows competitive play
-11. [ ] Game Passes grant premium benefits
+## Pre-Publish Checklist
+- [ ] Replace Game Pass placeholder IDs (currently 0)
+- [ ] Enable "Studio Access to API Services" for DataStore
+- [ ] Final zero-error playtest
+- [ ] Mobile viewport verification
 
 ---
 
@@ -163,7 +83,6 @@ None currently. Phase 5 complete, ready for game modes.
 
 | Date | Change |
 |------|--------|
-| 2026-03-25 | Initial NEXT_STEPS.md created |
-| 2026-03-25 | Updated for Phase 2 completion, Phase 3 priorities |
-| 2026-03-26 | Phase 3 & 4 complete, updated for Phase 5 (Monetization/UI) |
-| 2026-03-26 | Phase 5 complete, updated for Phase 6 (Game Modes) |
+| 2026-03-25 | Initial NEXT_STEPS.md |
+| 2026-03-26 | Phase 6 complete, AAA visual overhaul 9/10 done |
+| 2026-03-27 | First-person bow design approved, ready to implement |

@@ -1,8 +1,8 @@
 # Archery Legends Progress Log
 
-**Last Updated:** 2026-03-26
+**Last Updated:** 2026-03-27
 **Project:** Archery Legends (Roblox Archery Game)
-**Phase:** MVP Development
+**Phase:** Post-MVP — AAA Visual Overhaul
 
 ---
 
@@ -19,11 +19,168 @@
 | **Phase 3: Data Persistence** | **COMPLETE** | DataManager, auto-save, XP/currency awards |
 | **Phase 4: Progression** | **COMPLETE** | XP bar, daily rewards, leaderboards |
 | **Phase 5: Monetization/UI** | **COMPLETE** | Daily Reward UI, Leaderboard UI, Shop system |
-| Game Modes | NOT STARTED | Quick Match, Duel, Practice |
+| **Phase 6: Game Modes** | **COMPLETE** | Quick Match ✓, Practice ✓, Duel ✓, Game Passes ✓ |
 
 ---
 
 ## Completed Work
+
+### 2026-03-27: First-Person Bow Design Session (IN PROGRESS)
+
+**Status:** DESIGN PHASE
+
+Reconnected to Studio MCP, reviewed all scripts, and began design for Part 6 (First-Person Bow).
+
+**Context Explored:**
+| Script | Key Findings |
+|--------|-------------|
+| BowController | Owns `isDrawing`, `currentPower`, `aimDirection` state; creates BowUI ScreenGui |
+| HUDController | 615 lines; main panel upper-right, range data bottom-right, buttons bottom-left |
+| Config | ShopItems.BowSkins has 6 skins with Color properties for recoloring |
+
+**Design Decisions Made:**
+| Decision | Rationale |
+|----------|-----------|
+| ViewportFrame approach (not camera-welded parts) | Clean separation from world, self-contained, easy skin recoloring |
+| Build into BowController (not separate script) | Direct access to `isDrawing`/`currentPower` state without cross-script comms |
+| Detailed/ornate model (8-10 parts) | Premium look befitting AAA visual overhaul, more satisfying to draw |
+
+**Bow Model Spec (pending implementation):**
+- Two ornate limbs with visible wood grain (tapered, curved)
+- Wrapped grip section (contrasting color)
+- Limb tips / nocks (decorative)
+- String (Beam connecting limb tips)
+- Nocked arrow with fletching detail
+- Draw animation: string pulls back proportional to `currentPower`
+
+**MCP Connection Note:**
+- Studio plugin must connect to port 58741 (where the bridge listens)
+- Kill stale bridge processes if connection times out
+
+---
+
+### 2026-03-26: Phase 6 Complete — Duel Mode, Game Passes, Code Quality (COMPLETE)
+
+**Status:** COMPLETE
+
+Completed final Phase 6 features: Duel Mode, Game Passes, and Code Quality Audit.
+
+**Arena Fixes:**
+| Issue | Fix |
+|-------|-----|
+| Spawn at Y=0 (underground) | Moved to (0, 3, -5) |
+| Spawn facing away from target | Changed orientation to (0, 0, 0) |
+| Banner not visible | Created "ARCHERY LEGENDS" banner at Y=18, Z=35 above target |
+| Limited ambiance | Added AmbientParticles with DustMotes and Pollen |
+
+**DuelManager.server.luau** (ServerScriptService):
+| Feature | Implementation |
+|---------|----------------|
+| Matchmaking queue | Players join/leave queue, auto-match when 2 available |
+| Duel state machine | active → finished/abandoned states |
+| Turn management | Alternating turns, 5 arrows each player |
+| Score tracking | Per-player score, bullseyes, arrow history |
+| Winner determination | Highest score wins; bullseyes break ties |
+| Rewards | 2x XP/currency winner, 0.5x loser (with Game Pass multipliers) |
+| Rate limiting | 1s cooldown on RequestDuel remote |
+| Input validation | Validates action parameter (join/leave only) |
+| Cleanup | Removes from queue and rate limit cache on player leave |
+
+**DuelController.client.luau** (StarterPlayerScripts):
+| Feature | Implementation |
+|---------|----------------|
+| Queue button | "Find Duel" / "Leave Queue" toggle |
+| Queue status | "Searching for opponent..." indicator |
+| Duel HUD | Split-screen showing both players with VS divider |
+| Turn indicator | "YOUR TURN - FIRE!" / "OPPONENT'S TURN..." banner |
+| Result panel | Victory/Defeat/Draw with XP and currency earned |
+| Server events | Responds to DuelState updates for all phases |
+
+**GameManager Integration:**
+- Modified onFireArrow to check `_G.DuelManager.IsPlayerInDuel()`
+- Routes shots to DuelManager when in duel mode
+- Validates turn ownership before accepting shots
+
+**GamePassManager.server.luau** (ServerScriptService):
+| Feature | Implementation |
+|---------|----------------|
+| Pass checking | UserOwnsGamePassAsync with pcall safety |
+| Ownership cache | Per-player cache, loaded on join |
+| VIP Pass (299R) | 2x XP multiplier, [VIP] chat tag |
+| Double Currency (149R) | 2x currency multiplier |
+| Radio Pass (99R) | CanPlayAudio flag (future feature) |
+| Live purchase handling | PromptGamePassPurchaseFinished updates cache |
+| _G.GamePassManager API | GetXPMultiplier(), GetCurrencyMultiplier(), OwnsPass() |
+
+**DataManager Integration:**
+- UpdateRoundStats now applies `_G.GamePassManager.GetXPMultiplier()` to XP
+- UpdateRoundStats now applies `_G.GamePassManager.GetCurrencyMultiplier()` to currency
+
+**Code Quality Audit:**
+| Script | Security Feature |
+|--------|------------------|
+| GameManager | ✓ Rate limiting (0.5s cooldown via lastFireTime) |
+| GameManager | ✓ Input validation (direction magnitude, power bounds) |
+| GameManager | ✓ State guards (arrows remaining, round active) |
+| DuelManager | ✓ Rate limiting (1s cooldown on RequestDuel) |
+| DuelManager | ✓ Input validation (action must be "join" or "leave") |
+| DuelManager | ✓ State guards (can't join if in duel/queue) |
+| DuelManager | ✓ Memory cleanup (rate limit cache cleared on leave) |
+| DataManager | ✓ pcall wrapping on DataStore operations |
+| GamePassManager | ✓ pcall wrapping on MarketplaceService |
+
+**Config.luau Updates:**
+- Added Config.GamePasses with VIP, DoubleCurrency, Radio pass definitions
+- Placeholder IDs (0) for development; replace with real IDs from Creator Dashboard
+
+**New Remotes:**
+- RequestDuel (RemoteEvent)
+- DuelState (RemoteEvent)
+- GetGamePassStatus (RemoteFunction)
+- GamePassUpdated (RemoteEvent)
+
+**Playtest:** Zero errors, all scripts initialize correctly ✓
+
+---
+
+### 2026-03-26: Phase 6 Practice Mode (COMPLETE)
+
+**Status:** COMPLETE
+
+Implemented Practice Mode as part of Phase 6 Game Modes:
+
+**GameManager.server.luau Additions:**
+| Feature | Implementation |
+|---------|----------------|
+| PlayerRoundState.isPractice | Boolean flag distinguishing practice from ranked |
+| startPracticeMode() | Initializes unlimited arrows (999), no persistence |
+| endPracticeMode() | Clean exit without DataManager/Leaderboard calls |
+| PRACTICE_ARROWS | Constant = 999 for effectively unlimited shooting |
+| endRound practice check | Skips DataManager.UpdateRoundStats and LeaderboardManager.SubmitScore |
+
+**HUDController.client.luau Additions:**
+| Feature | Implementation |
+|---------|----------------|
+| Practice Badge | Green "PRACTICE MODE" banner above HUD |
+| Toggle Button | Bottom-left button (green/red state toggle) |
+| Arrow display | Shows "∞" instead of "X/10" in practice |
+| XP bar hiding | Hidden during practice (no XP earned) |
+| PracticeState handler | Responds to server practice state changes |
+
+**New Remotes:**
+- StartPractice (RemoteEvent)
+- EndPractice (RemoteEvent)
+- PracticeState (RemoteEvent)
+
+**Key Design Decisions:**
+- Practice mode grants unlimited arrows but awards zero XP/currency
+- Scores not submitted to leaderboards
+- Clean visual distinction (green badge, ∞ arrows)
+- Single button toggles in/out of practice
+
+**Playtest:** Zero errors, GameManager initializes with "Quick Match + Practice Mode ready" ✓
+
+---
 
 ### 2026-03-26: Phase 5 Monetization & UI Polish (COMPLETE)
 
@@ -339,3 +496,10 @@ Created operational documentation structure mirroring ATL project:
 | 2026-03-25 | Arena visual polish complete (terrain, particles, torches, target glow) |
 | 2026-03-25 | Phase 2 core mechanic started (BowController, arrow flight, hit detection) |
 | 2026-03-26 | Phase 5 complete (Daily Reward UI, Leaderboard UI, Shop system) |
+| 2026-03-26 | Phase 6 Practice Mode complete (unlimited arrows, no persistence) |
+| 2026-03-26 | Phase 6 Duel Mode complete (1v1 matchmaking, turns, rewards) |
+| 2026-03-26 | Phase 6 Game Passes complete (VIP, Double Currency, Radio) |
+| 2026-03-26 | Code Quality Audit complete (rate limiting, input validation) |
+| 2026-03-26 | Arena fixes (spawn position, banner visibility, ambiance) |
+| 2026-03-26 | **MVP COMPLETE** — All 6 phases finished |
+| 2026-03-27 | First-person bow design session — ViewportFrame approach chosen |

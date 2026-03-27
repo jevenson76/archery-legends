@@ -537,8 +537,8 @@ No session should feel "done." Always leave a carrot dangling.
 
 **Game Modes:**
 - [x] Quick Match (10 arrows, solo)
-- [ ] 1v1 Duel (alternating turns, 5 arrows each)
-- [ ] Practice Range (unlimited, no scoring)
+- [x] 1v1 Duel (alternating turns, 5 arrows each)
+- [x] Practice Range (unlimited, no scoring)
 
 **Progression:**
 - [x] XP and leveling (to 100)
