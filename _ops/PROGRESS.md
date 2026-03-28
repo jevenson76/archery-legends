@@ -35,6 +35,11 @@
 | **Hub Visual Cleanup** | **COMPLETE** | Trees cleared, pathways, lamps, benches, flowers, ground fixed |
 | **Gate Wall Decorations** | **COMPLETE** | Ember/Crystal/Sky/Deep themed walls, octopus, particles |
 | **Server Gameplay Mechanics** | **COMPLETE** | Countdown, arrow sticking, distanceFromCenter |
+| **Client Gameplay Feedback** | **COMPLETE** | Countdown, popups, particles, shake, streak, near-miss, arrow pulse |
+| **Greenwood Range Polish** | **COMPLETE** | Hay bales, markers, trees, flowers, backstop, fences |
+| **Castle Range Polish** | **COMPLETE** | Steps, banners, weapons, glass, dust, arches, sconces, crown sparkle |
+| **Character Skins** | **COMPLETE** | 6 skins in shop, body color applier, SKINS tab |
+| **Daily Spin Wheel** | **COMPLETE** | SpinWheelController, animation, reward popup, confetti |
 
 ---
 
