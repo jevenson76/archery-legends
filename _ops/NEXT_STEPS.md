@@ -1,52 +1,71 @@
 # Archery Legends Next Steps
 
 **Last Updated:** 2026-03-28
-**Current Phase:** Post-MVP — Pre-Publish Polish
+**Current Phase:** Range Polish & Gameplay Feedback
 
 ---
 
-## Immediate Priority
+## In Progress: Phase 2 — Client Gameplay Feedback (7 items)
 
-### 1. Full Gameplay Testing
-- [ ] Walk hub → Greenwood → shoot 10 arrows → verify scoring + round end
-- [ ] Walk hub → Castle → shoot at throne → verify scoring works
-- [ ] Verify HUD transitions (hub compact → range full → hub compact)
-- [ ] Test arrow flight animation (visible arc from bow to target)
-- [ ] Test bow draw/release sounds
-- [ ] Verify accuracy spread feels right (tune BaseSpread if needed)
+### C1. HUD Countdown Display
+- [ ] Listen for RoundCountdown remote
+- [ ] Center-screen "3→2→1→FIRE!" with scale tween + fade
+- [ ] 72px GothamBlack, white numbers, green "FIRE!"
 
-### 2. Character Skin System Backend
-- [ ] Implement outfit application (Shirt + Pants textures on character)
-- [ ] Wire "The Outfitter" shop mannequins to purchase/equip flow
-- [ ] Add character skin data to PlayerData/DataStore schema
+### C2. 3D Score Popup at Impact
+- [ ] BillboardGui at hitPosition from ArrowResult
+- [ ] Zone-colored "+10 BULLSEYE!" text, rises 3 studs, fades
 
-### 3. Environment Polish
-- [ ] Add grass/bush details along hub paths
-- [ ] Refine castle corridor (currently bare walls)
-- [ ] Add ambient sounds per zone (forest birds for Greenwood, echoes for Castle)
+### C3. Impact Particle Burst
+- [ ] Emit(20) particles at hitPosition, zone-colored
+- [ ] PointLight flash 0.3s, auto-destroy
 
----
+### C4. Camera Shake on Bullseye
+- [ ] Micro shake 0.2s on zone=="Bullseye" only
 
-## Pre-Publish Checklist
-- [ ] Replace Game Pass placeholder IDs (currently 0)
-- [ ] Enable "Studio Access to API Services" for DataStore testing
-- [ ] Final zero-error playtest with DataStore enabled
-- [x] Mobile viewport verification (scale-based panels + UISizeConstraint)
-- [ ] Upload custom bow draw/release audio for better quality
-- [ ] Set game icon and thumbnails
-- [ ] Test on mobile device
-- [ ] Level 5 gate check for Castle Range entrance
+### C5. Near-Miss Indicator
+- [ ] "MISS — X studs away!" when distanceFromCenter < Edge+2
+
+### C6. Streak Counter
+- [ ] "STREAK x3!" on consecutive hits, breaks on miss
+
+### C7. Arrow Count Pulse
+- [ ] Red pulse when arrows ≤ 3, "FINAL ARROW" on last
 
 ---
 
-## Future Content (Post-Launch)
-- [ ] Build Castle Range interior details (more furniture, throne room details)
-- [ ] Build first locked range when ready (Ember Depths or Crystal Caverns)
-- [ ] Daily Spin Wheel functionality (backend)
-- [ ] Character skin system (applying outfits)
-- [ ] Battle Pass system
-- [ ] Tournament mode
-- [ ] Clan system
+## Upcoming: Phase 3 — Greenwood Visual Polish (10 items)
+- [ ] Hay bales flanking target
+- [ ] Range distance markers (10m-40m)
+- [ ] Wind flag on archway
+- [ ] Quiver stand + scoreboard + bench on deck
+- [ ] Tree line replenishment (20 trees along lane)
+- [ ] Ground flowers along path
+- [ ] Target backstop (earth mound)
+- [ ] Fence posts along lane edges
+
+## Upcoming: Phase 4 — Castle Visual Polish (10 items)
+- [ ] Throne steps + rug widening
+- [ ] Throne room banners (crown + crossed swords)
+- [ ] Weapon racks between armored suits
+- [ ] Stained glass windows (6, colored PointLights)
+- [ ] Dust particle atmosphere
+- [ ] Corridor stone arches + torch brackets
+- [ ] Wall sconces between tapestries
+- [ ] Crown sparkle particle effect
+
+---
+
+## Completed This Session
+
+| Task | Status |
+|------|--------|
+| Phase 1: Server mechanics (countdown, arrow stick, distanceFromCenter) | DONE |
+| Hub cleanup (108 trees removed, pathways, lamps, benches, flowers) | DONE |
+| Gate wall decorations (4 themed gates) | DONE |
+| "Sunken Sanctum" renamed to "The Deep" + full octopus | DONE |
+| Grass ground removed, proper ground planes added | DONE |
+| HUD initial mode bug fixed (hudMode="init") | DONE |
 
 ---
 
@@ -54,7 +73,7 @@
 
 | Date | Change |
 |------|--------|
-| 2026-03-25 | Initial NEXT_STEPS.md |
-| 2026-03-26 | Phase 6 complete, AAA visual overhaul |
-| 2026-03-27 | Environment overhaul, sounds, UI polish |
-| 2026-03-28 | Hub + Castle + multi-target + context-sensitive HUD |
+| 2026-03-25 | Initial |
+| 2026-03-26 | Phase 6 complete |
+| 2026-03-27 | Environment, sounds, UI polish |
+| 2026-03-28 | Hub + Castle + HUD + server mechanics + hub cleanup + gate decoration |

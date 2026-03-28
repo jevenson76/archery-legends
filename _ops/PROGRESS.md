@@ -2,7 +2,7 @@
 
 **Last Updated:** 2026-03-28
 **Project:** Archery Legends (Roblox Archery Game)
-**Phase:** Post-MVP — Multi-Zone Architecture & HUD Polish
+**Phase:** Post-MVP — Range Polish & Gameplay Feedback
 
 ---
 
@@ -32,10 +32,40 @@
 | **Castle Range** | **COMPLETE** | Enclosed stone hall, throne target, tapestries, armored suits |
 | **Multi-Target Engine** | **COMPLETE** | GameManager ranges registry, position-based detection |
 | **Context-Sensitive HUD** | **COMPLETE** | Hub mode (compact) vs Range mode (full), smooth tweens |
+| **Hub Visual Cleanup** | **COMPLETE** | Trees cleared, pathways, lamps, benches, flowers, ground fixed |
+| **Gate Wall Decorations** | **COMPLETE** | Ember/Crystal/Sky/Deep themed walls, octopus, particles |
+| **Server Gameplay Mechanics** | **COMPLETE** | Countdown, arrow sticking, distanceFromCenter |
 
 ---
 
 ## Completed Work
+
+### 2026-03-28: Server Gameplay Mechanics + Hub Cleanup (COMPLETE)
+
+**Status:** COMPLETE
+
+**Server Mechanics (GameManager):**
+- Round countdown: 3→2→1→FIRE! via RoundCountdown RemoteEvent (0.8s per number)
+- Arrows stick in target until round end (60s safety, cleanup via ShotBy attribute)
+- distanceFromCenter added to SimulationResult + ArrowResult payloads (enables near-miss)
+- Miss detection improved: arrows crossing target plane without scoring store distance
+
+**Hub Visual Cleanup:**
+- Removed 108 forest trees inside hub radius
+- Removed arena_ground (grass plane blocking hub)
+- Added Greenwood/Castle/backdrop/surround ground planes
+- Added 6 radial cobblestone pathways, circular ring path (24 segments)
+- Added 12 lamp posts, 6 benches, 12 flower beds
+- Fixed HUD initial mode (hudMode="init" → first setHudMode applies)
+- Removed duplicate Lake folder, empty Targets folder
+
+**Gate Wall Decorations:**
+- Ember Depths: basalt walls, 16 lava cracks, glow strips, flame banners
+- Crystal Caverns: glacier walls, 12 crystal formations, frost strips, ice banners
+- Sky Temple: marble walls, golden vine reliefs, cloud wisps, floating orbs, gold banners
+- The Deep (renamed from Sunken Sanctum): teal slate walls, coral, seaweed, shells, full octopus with 6 tentacles + head + eyes
+
+---
 
 ### 2026-03-28: Context-Sensitive HUD System (COMPLETE)
 
