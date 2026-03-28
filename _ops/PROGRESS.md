@@ -1,8 +1,8 @@
 # Archery Legends Progress Log
 
-**Last Updated:** 2026-03-27
+**Last Updated:** 2026-03-28
 **Project:** Archery Legends (Roblox Archery Game)
-**Phase:** Post-MVP — AAA Visual Overhaul
+**Phase:** Post-MVP — Gameplay Polish & Bug Fixes
 
 ---
 
@@ -19,43 +19,226 @@
 | **Phase 3: Data Persistence** | **COMPLETE** | DataManager, auto-save, XP/currency awards |
 | **Phase 4: Progression** | **COMPLETE** | XP bar, daily rewards, leaderboards |
 | **Phase 5: Monetization/UI** | **COMPLETE** | Daily Reward UI, Leaderboard UI, Shop system |
-| **Phase 6: Game Modes** | **COMPLETE** | Quick Match ✓, Practice ✓, Duel ✓, Game Passes ✓ |
+| **Phase 6: Game Modes** | **COMPLETE** | Quick Match, Practice, Duel, Game Passes |
+| **World Bow** | **COMPLETE** | 3D bow welded to character left hand |
+| **Environment Overhaul** | **COMPLETE** | Concept art-matched arena rebuild |
+| **Sound Assets** | **COMPLETE** | 16 audio instances with real asset IDs |
+| **HUD Reorder** | **COMPLETE** | Streak to bottom, hidden when 0 |
+| **UI Polish Pass** | **COMPLETE** | Green theme, consistency, mobile responsive |
+| **Sound Integration** | **COMPLETE** | SoundManager module, all 16 sounds tuned + wired |
+| **Accuracy System** | **COMPLETE** | Server-side spread, SteadyHand shop item, power scaling |
+| **Gameplay Fixes** | **COMPLETE** | Platform, HUD, lane length, arrow flight, bullseye detection |
 
 ---
 
 ## Completed Work
 
-### 2026-03-27: First-Person Bow Design Session (IN PROGRESS)
+### 2026-03-28: Gameplay Polish & Critical Bug Fixes (COMPLETE)
 
-**Status:** DESIGN PHASE
+**Status:** COMPLETE
 
-Reconnected to Studio MCP, reviewed all scripts, and began design for Part 6 (First-Person Bow).
+Major session fixing gameplay-breaking bugs and adding core mechanics.
 
-**Context Explored:**
-| Script | Key Findings |
-|--------|-------------|
-| BowController | Owns `isDrawing`, `currentPower`, `aimDirection` state; creates BowUI ScreenGui |
-| HUDController | 615 lines; main panel upper-right, range data bottom-right, buttons bottom-left |
-| Config | ShopItems.BowSkins has 6 skins with Color properties for recoloring |
+**Critical Bug Fixes:**
+| Fix | Details |
+|-----|---------|
+| Bullseye detection broken | GameManager looked for "New Yeller" color but target was "Deep orange". Changed to find smallest part (robust). Hits were ALL registering as MISS. |
+| HUD invisible | 6 empty Folders in StarterGui conflicted with controller-created ScreenGuis. Deleted all placeholder folders. |
+| Platform invisible | Shooting deck floor at Y=0.5 blended with ground. Raised deck 1 stud, thickened floor to 1.0 stud. |
+| Target off-center | Target at X=3 instead of lane center X=0. Shifted all target parts to X=0. |
+| Mountain blocking view | Mountain 7 at Z=-0.7 instead of backdrop zone Z=95-170. Moved to Z=130. |
+| TargetArchway missing | Rebuilt with wood posts, cross beams, "Archery Legends / Greenwood Range" sign. |
 
-**Design Decisions Made:**
-| Decision | Rationale |
-|----------|-----------|
-| ViewportFrame approach (not camera-welded parts) | Clean separation from world, self-contained, easy skin recoloring |
-| Build into BowController (not separate script) | Direct access to `isDrawing`/`currentPower` state without cross-script comms |
-| Detailed/ornate model (8-10 parts) | Premium look befitting AAA visual overhaul, more satisfying to draw |
+**New Features:**
+| Feature | Details |
+|---------|---------|
+| Accuracy spread system | Server-side spread in GameManager. BaseSpread=0.04 rad, reduced by power (60%) and SteadyHand shop item (50%). |
+| Client arrow flight | BowController launches visible arrow along physics arc (gravity, direction, power). Auto-destroys on ground/past-target. |
+| Arrow trail integration | Flying arrow shows ParticleEmitter matching equipped trail color from shop. |
+| Lane extension | Target moved from Z=21 to Z=45 (50 stud range). Stone path, borders, torches extended. |
+| Bow release sound | Replaced sword-clash sound (9114444008) with bow twang (6472453973 at 1.3x speed). |
 
-**Bow Model Spec (pending implementation):**
-- Two ornate limbs with visible wood grain (tapered, curved)
-- Wrapped grip section (contrasting color)
-- Limb tips / nocks (decorative)
-- String (Beam connecting limb tips)
-- Nocked arrow with fletching detail
-- Draw animation: string pulls back proportional to `currentPower`
+**Sound Asset Refinement (research agent + manual fixes):**
+| Sound | Old Asset | New Asset | Reason |
+|-------|-----------|-----------|--------|
+| Miss | 7112275565 (cash register!) | 624706518 | Was playing purchase sound on miss |
+| HitBullseye | 6150774030 (2.8s) | 7128958209 | Sharper bell ding, 75+ favorites |
+| HitInner | 1053296915 (Minecraft) | 3626698892 | Dedicated thud sound |
+| HitOuter | 1053296915 (=Inner) | 3626698892 | Same thud, differentiated by 0.85x pitch |
+| PurchaseSuccess | 5964495032 | 7112275565 | Proper cash register kaching |
+| StreakChime | 1620077983 | 131573697 | Classic subtle bell |
+| BowDraw | 9089204439 (1.8s) | kept | Fixed stop-on-release (was playing 6.6s) |
+| BowRelease | 9114444008 (sword) | 6472453973 | Proper twang at 1.3x |
 
-**MCP Connection Note:**
-- Studio plugin must connect to port 58741 (where the bridge listens)
-- Kill stale bridge processes if connection times out
+**Config Changes:**
+- Added `Config.Physics.BaseSpread`, `PowerAccuracyScale`, `SteadyHandReduction`
+- Updated `Config.Sounds` with all corrected asset IDs
+
+**Playtest:** Zero script errors across all 12 scripts.
+
+---
+
+### 2026-03-27: Sound Integration (COMPLETE)
+
+**Status:** COMPLETE
+
+Created SoundManager module and wired all 16 audio instances into gameplay.
+
+**SoundManager Module (ReplicatedStorage.Modules.SoundManager):**
+- Clone-and-play pattern for overlapping sounds
+- `play(name)` — play any sound by instance name
+- `playZone(zone)` — maps hit zone names to hit sounds
+
+**Volume/PlaybackSpeed Tuning:**
+| Sound | Volume | Speed | Design |
+|-------|--------|-------|--------|
+| HitBullseye | 0.8 | 1.2 | Sharp, exciting, high pitch |
+| HitInner | 0.7 | 1.0 | Solid baseline |
+| HitOuter | 0.6 | 0.85 | Lower pitch, duller |
+| HitEdge | 0.5 | 0.7 | Dullest, least rewarding |
+| Miss | 0.4 | 1.0 | Subtle swoosh |
+| BowDraw | 0.5 | 1.0 | Ambient tension |
+| BowRelease | 0.7 | 1.1 | Snappy twang |
+| LevelUp | 0.8 | 1.0 | Celebration |
+| StreakChime | 0.5 | 1.0 | Subtle positive |
+| StreakBreak | 0.4 | 0.8 | Low disappointment |
+| ButtonClick | 0.3 | 1.2 | Quick UI tick |
+| PurchaseSuccess | 0.6 | 1.0 | Reward confirmation |
+| VoiceTaunt | 0.4 | 0.9 | Slightly deep |
+| VoiceCheer | 0.5 | 1.15 | Bright, upbeat |
+| VoiceGroan | 0.4 | 0.7 | Deep, disappointed |
+| VoiceReady | 0.5 | 1.0 | Neutral alert |
+
+**Wiring Points:**
+| Script | Sound | Trigger |
+|--------|-------|---------|
+| BowController | BowDraw | Mouse down (draw start) |
+| BowController | BowRelease | Mouse up (fire) |
+| HUDController | HitBullseye/Inner/Outer/Edge/Miss | ArrowResult event (per zone) |
+| HUDController | LevelUp | Level up in round end |
+| ShopController | ButtonClick | Equip success |
+| ShopController | PurchaseSuccess | Purchase success |
+| DailyRewardController | PurchaseSuccess | Claim reward |
+
+**Playtest:** Zero errors across all scripts.
+
+---
+
+### 2026-03-27: UI Polish Pass (COMPLETE)
+
+**Status:** COMPLETE
+
+Full UI polish pass across all 5 client controllers.
+
+**Duel Button Restyle (green theme):**
+| Change | Details |
+|--------|---------|
+| BackgroundColor3 | Blue (80,80,180) → HUD green (15,25,18) |
+| UIStroke | Blue (120,120,220) → green border (50,100,60) |
+| Font | GothamBold → GothamBlack (match HUD) |
+| Size | 140x40 → 140x50 (touch target) |
+| Position | (20,-110) → (12,-125) aligned with HUD bar |
+| All reset states | Updated (hideDuelUI, leaveQueue, leftQueue) |
+
+**Popup Consistency Fixes:**
+| Fix | Script | Change |
+|-----|--------|--------|
+| Shop action button height | ShopController | 28px → 36px |
+| Duel result button | DuelController | 120x40 → 140x44 |
+| DailyReward panel color | DailyRewardController | (25,25,35) → (30,30,45) |
+| DailyReward title font | DailyRewardController | GothamMedium → GothamBold |
+| Leaderboard close button | LeaderboardController | 30x30 → 32x32 |
+| Leaderboard title size | LeaderboardController | 22 → 24 |
+
+**Mobile Responsive Panels:**
+| Panel | Old Size | New Size | MaxSize |
+|-------|----------|----------|---------|
+| Shop | 520x480 fixed | 92%W × 85%H | 520x480 |
+| DailyReward | 460x380 fixed | 92%W × 70%H | 460x380 |
+| Duel HUD | 400x100 fixed | 85%W × 100px | 400x100 |
+| Duel Turn Indicator | 250x40 fixed | 60%W × 40px | — |
+| Duel Result | 350x250 fixed | 85%W × 260px | 350x260 |
+| Round End | 30%W × 50%H | 80%W × 60%H | 350x380 |
+
+**Animation updates:** DailyReward show/hide tweens updated from fixed offsets to scale-based.
+
+**Playtest:** Zero script errors. Only expected DataStore warnings (Studio API access disabled).
+
+---
+
+### 2026-03-27: Environment Overhaul + World Bow + Sounds (COMPLETE)
+
+**Status:** COMPLETE
+
+Major session covering world bow, full environment rebuild to match concept art, HUD polish, and sound assets.
+
+**World Bow (replaced ViewportFrame approach):**
+| Feature | Implementation |
+|---------|----------------|
+| Approach pivot | Switched from ViewportFrame overlay to world-space welded bow |
+| Bow model | 12 parts: grip, grip wrap, upper/lower limbs, nock tips, string (2 segments), arrow (shaft, head, 2 fletches) |
+| Attachment | WeldConstraint to character LeftHand (R15) or Left Arm (R6) |
+| Draw animation | String segments + arrow track grip position, pull back proportional to currentPower |
+| Fire animation | Arrow hides on fire, re-nocks after 0.4s delay |
+| Skin support | applySkin() recolors limbs from Config.ShopItems.BowSkins Color |
+| Lifecycle | Creates on CharacterAdded, destroys on death |
+
+**Environment Rebuild (matching concept art):**
+| Element | Details |
+|---------|---------|
+| Lighting | ClockTime 10.5, Atmosphere (misty), ColorCorrection (warm), Bloom |
+| Ground | LeafyGrass material, lush green |
+| Forest | 54 trees: mixed pine (conical, 3-layer) + deciduous (round canopy), pushed to X=18-58 |
+| Mountains | 8 peaks with ridges + snow caps, Z=95-170, FileMesh cones |
+| Shooting Deck | Open 4-post pavilion, angled wood plank roof, side/back rails, front step |
+| Stone Path | 5-stud wide Slate strip with Cobblestone borders, Z=-1 to Z=27 |
+| Target Archway | 14-stud wide, 21.75-stud tall posts, cross beams, sign board |
+| Sign | "Archery Legends" (gold Fantasy font) + divider + "Greenwood Range" (green), text strokes for legibility |
+| Torches | 10 lane torches at X=+-5, Fire + PointLight, every 6 studs |
+| Lake | Preserved from previous build |
+
+**Cleanup performed:**
+- Removed old firing_platform, decorations, spectator_area, ground_details, ShootingLane, EnvironmentDetail, arena_monuments, arena_banners, LaneFencing, Campfire, old GateArchways
+- Removed target easel per user request
+
+**HUD Changes:**
+| Change | Details |
+|--------|---------|
+| Layout reorder | Score moved to top, Daily Streak moved to bottom |
+| Streak hidden when 0 | streakLabel + streakValue set Visible=false when streak is 0 |
+| Fixed xpBarFrame bug | Practice mode referenced undefined xpBarFrame, fixed to xpBarBg |
+
+**Sound Assets (16 instances in ReplicatedStorage.Audio):**
+| Sound | Asset ID | Status |
+|-------|----------|--------|
+| BowDraw | 9113081793 | Working |
+| BowRelease | 9114444008 | Working |
+| HitBullseye | 6472453973 | Working |
+| HitInner | 1053296915 | Working |
+| HitOuter | 1053296915 | Working |
+| HitEdge | 6472453973 | Working |
+| Miss | 2235655773 | Working |
+| LevelUp | 2686079706 | Working |
+| StreakChime | 5826672935 | Working |
+| StreakBreak | 2235655773 | Working |
+| ButtonClick | 6895079853 | Working |
+| PurchaseSuccess | 2686079706 | Working |
+| VoiceTaunt | 2235655773 | Working |
+| VoiceCheer | 5826672935 | Working |
+| VoiceGroan | 2235655773 | Working |
+| VoiceReady | 6895079853 | Working |
+
+**Config.Sounds also updated to match.**
+
+**Playtest:** Zero sound errors, zero script errors. Only expected DataStore warnings (Studio API access disabled).
+
+---
+
+### 2026-03-27: First-Person Bow Design Session (SUPERSEDED)
+
+**Status:** SUPERSEDED by world bow approach above
+
+Original design was ViewportFrame overlay. Pivoted to world-space welded bow for better visual integration.
 
 ---
 
@@ -77,413 +260,40 @@ Completed final Phase 6 features: Duel Mode, Game Passes, and Code Quality Audit
 | Feature | Implementation |
 |---------|----------------|
 | Matchmaking queue | Players join/leave queue, auto-match when 2 available |
-| Duel state machine | active → finished/abandoned states |
+| Duel state machine | active -> finished/abandoned states |
 | Turn management | Alternating turns, 5 arrows each player |
 | Score tracking | Per-player score, bullseyes, arrow history |
 | Winner determination | Highest score wins; bullseyes break ties |
 | Rewards | 2x XP/currency winner, 0.5x loser (with Game Pass multipliers) |
-| Rate limiting | 1s cooldown on RequestDuel remote |
-| Input validation | Validates action parameter (join/leave only) |
-| Cleanup | Removes from queue and rate limit cache on player leave |
-
-**DuelController.client.luau** (StarterPlayerScripts):
-| Feature | Implementation |
-|---------|----------------|
-| Queue button | "Find Duel" / "Leave Queue" toggle |
-| Queue status | "Searching for opponent..." indicator |
-| Duel HUD | Split-screen showing both players with VS divider |
-| Turn indicator | "YOUR TURN - FIRE!" / "OPPONENT'S TURN..." banner |
-| Result panel | Victory/Defeat/Draw with XP and currency earned |
-| Server events | Responds to DuelState updates for all phases |
-
-**GameManager Integration:**
-- Modified onFireArrow to check `_G.DuelManager.IsPlayerInDuel()`
-- Routes shots to DuelManager when in duel mode
-- Validates turn ownership before accepting shots
 
 **GamePassManager.server.luau** (ServerScriptService):
 | Feature | Implementation |
 |---------|----------------|
-| Pass checking | UserOwnsGamePassAsync with pcall safety |
-| Ownership cache | Per-player cache, loaded on join |
 | VIP Pass (299R) | 2x XP multiplier, [VIP] chat tag |
 | Double Currency (149R) | 2x currency multiplier |
 | Radio Pass (99R) | CanPlayAudio flag (future feature) |
-| Live purchase handling | PromptGamePassPurchaseFinished updates cache |
-| _G.GamePassManager API | GetXPMultiplier(), GetCurrencyMultiplier(), OwnsPass() |
 
-**DataManager Integration:**
-- UpdateRoundStats now applies `_G.GamePassManager.GetXPMultiplier()` to XP
-- UpdateRoundStats now applies `_G.GamePassManager.GetCurrencyMultiplier()` to currency
+**Code Quality Audit:** Rate limiting, input validation, state guards on all remotes.
 
-**Code Quality Audit:**
-| Script | Security Feature |
-|--------|------------------|
-| GameManager | ✓ Rate limiting (0.5s cooldown via lastFireTime) |
-| GameManager | ✓ Input validation (direction magnitude, power bounds) |
-| GameManager | ✓ State guards (arrows remaining, round active) |
-| DuelManager | ✓ Rate limiting (1s cooldown on RequestDuel) |
-| DuelManager | ✓ Input validation (action must be "join" or "leave") |
-| DuelManager | ✓ State guards (can't join if in duel/queue) |
-| DuelManager | ✓ Memory cleanup (rate limit cache cleared on leave) |
-| DataManager | ✓ pcall wrapping on DataStore operations |
-| GamePassManager | ✓ pcall wrapping on MarketplaceService |
-
-**Config.luau Updates:**
-- Added Config.GamePasses with VIP, DoubleCurrency, Radio pass definitions
-- Placeholder IDs (0) for development; replace with real IDs from Creator Dashboard
-
-**New Remotes:**
-- RequestDuel (RemoteEvent)
-- DuelState (RemoteEvent)
-- GetGamePassStatus (RemoteFunction)
-- GamePassUpdated (RemoteEvent)
-
-**Playtest:** Zero errors, all scripts initialize correctly ✓
+**Playtest:** Zero errors, all scripts initialize correctly.
 
 ---
 
-### 2026-03-26: Phase 6 Practice Mode (COMPLETE)
+### 2026-03-26: Phases 3-5 (COMPLETE)
 
-**Status:** COMPLETE
-
-Implemented Practice Mode as part of Phase 6 Game Modes:
-
-**GameManager.server.luau Additions:**
-| Feature | Implementation |
-|---------|----------------|
-| PlayerRoundState.isPractice | Boolean flag distinguishing practice from ranked |
-| startPracticeMode() | Initializes unlimited arrows (999), no persistence |
-| endPracticeMode() | Clean exit without DataManager/Leaderboard calls |
-| PRACTICE_ARROWS | Constant = 999 for effectively unlimited shooting |
-| endRound practice check | Skips DataManager.UpdateRoundStats and LeaderboardManager.SubmitScore |
-
-**HUDController.client.luau Additions:**
-| Feature | Implementation |
-|---------|----------------|
-| Practice Badge | Green "PRACTICE MODE" banner above HUD |
-| Toggle Button | Bottom-left button (green/red state toggle) |
-| Arrow display | Shows "∞" instead of "X/10" in practice |
-| XP bar hiding | Hidden during practice (no XP earned) |
-| PracticeState handler | Responds to server practice state changes |
-
-**New Remotes:**
-- StartPractice (RemoteEvent)
-- EndPractice (RemoteEvent)
-- PracticeState (RemoteEvent)
-
-**Key Design Decisions:**
-- Practice mode grants unlimited arrows but awards zero XP/currency
-- Scores not submitted to leaderboards
-- Clean visual distinction (green badge, ∞ arrows)
-- Single button toggles in/out of practice
-
-**Playtest:** Zero errors, GameManager initializes with "Quick Match + Practice Mode ready" ✓
+- Phase 3: DataStore persistence, XP/currency awards
+- Phase 4: XP bar, daily rewards, leaderboards
+- Phase 5: Daily Reward UI, Leaderboard UI, Shop system
+- Phase 6: Practice Mode (unlimited arrows, no persistence)
 
 ---
 
-### 2026-03-26: Phase 5 Monetization & UI Polish (COMPLETE)
-
-**Status:** COMPLETE
-
-Implemented all Phase 5 UI systems and shop functionality:
-
-**DailyRewardController.client.luau** (StarterPlayerScripts):
-| Feature | Implementation |
-|---------|----------------|
-| 7-day calendar grid | Visual representation of weekly rewards |
-| Streak display | "Day X of 7" progress indicator |
-| Claim button | Pulsing animation when reward available |
-| Auto-show on login | Popup appears if reward unclaimed |
-| Server integration | ClaimDailyReward RemoteFunction |
-
-**LeaderboardController.client.luau** (StarterPlayerScripts):
-| Feature | Implementation |
-|---------|----------------|
-| Tab interface | Daily/Weekly/AllTime toggle buttons |
-| Top 50 display | Scrolling list with rank, name, score |
-| Medal indicators | Gold/Silver/Bronze for top 3 |
-| Current player highlight | Yellow highlight for local player |
-| Auto-refresh | Updates every 60 seconds |
-| Toggle hotkey | Press L to show/hide |
-
-**ShopManager.server.luau** (ServerScriptService):
-| Feature | Implementation |
-|---------|----------------|
-| GetShopData | Returns catalog with ownership status |
-| PurchaseItem | Validates currency, grants item, saves |
-| EquipItem | Updates equipped bow/trail |
-| DataManager integration | Uses _G.DataManager for persistence |
-
-**ShopController.client.luau** (StarterPlayerScripts):
-| Feature | Implementation |
-|---------|----------------|
-| Tabbed interface | Bow Skins / Arrow Trails tabs |
-| Item grid | Cards with name, price, owned/equipped status |
-| Buy/Equip buttons | Context-aware action buttons |
-| Currency display | Shows current balance, updates on purchase |
-| Toggle hotkey | Press B to show/hide |
-
-**Config.luau Updates:**
-- Added ShopItems catalog (6 bow skins, 5 arrow trails)
-- Prices range from free to 1000 currency
-
-**Types.luau Updates:**
-- Added OwnedItems field (flat array of item IDs)
-- Default equipped items: bow_default, trail_none
-
-**New Remotes:**
-- GetShopData (RemoteFunction)
-- PurchaseItem (RemoteFunction)
-- EquipItem (RemoteFunction)
-
-**Playtest:** Zero errors, all 10 scripts initialize correctly ✓
-
----
-
-### 2026-03-26: Phase 4 Progression Systems (COMPLETE)
-
-**Status:** COMPLETE
-
-Implemented XP bar, daily rewards, and leaderboard systems:
-
-**XP Bar (HUDController.client.luau):**
-| Feature | Implementation |
-|---------|----------------|
-| XP bar UI | Below main HUD, 300px wide with gradient fill |
-| Level display | "Lv N" label on left side |
-| XP text | "current / required" format on right |
-| Animation | TweenService smooth fill on XP gain |
-| Server sync | Uses server-provided level/XP data |
-
-**DailyRewardManager.server.luau** (ServerScriptService):
-| Feature | Implementation |
-|---------|----------------|
-| Date tracking | YYYY-MM-DD format for day comparison |
-| Streak system | Consecutive days tracked, resets if >1 day missed |
-| 7-day cycle | Escalating rewards from Config.DailyRewards |
-| Reward types | Currency, Item, Chest with streak multiplier |
-| Auto-check | Sends DailyRewardStatus to client on join |
-
-**LeaderboardManager.server.luau** (ServerScriptService):
-| Feature | Implementation |
-|---------|----------------|
-| OrderedDataStore | Separate stores for Daily, Weekly, AllTime |
-| Date-keyed stores | Daily_2026-03-26, Weekly_2026-W13 format |
-| Auto-submit | Scores submitted after each round via GameManager |
-| Top 50 retrieval | GetSortedAsync with player name lookup |
-| Remote handlers | GetLeaderboard (RemoteFunction) for client queries |
-
-**Config Updates:**
-- Added Config.Leaderboards with DisplayCount, Types, RefreshInterval
-
-**New Remotes:**
-- ClaimDailyReward (RemoteFunction)
-- DailyRewardStatus (RemoteEvent)
-- GetLeaderboard (RemoteFunction)
-- LeaderboardUpdated (RemoteEvent)
-
-**Playtest:** Zero errors, all six scripts initialize correctly ✓
-
----
-
-### 2026-03-26: Phase 3 Data Persistence (COMPLETE)
-
-**Status:** COMPLETE
-
-Implemented DataStore persistence with XP/currency progression:
-
-**DataManager.server.luau** (ServerScriptService):
-| Feature | Implementation |
-|---------|----------------|
-| DataStore setup | ArcheryLegends_PlayerData_v1 store with versioning |
-| Load with retry | 3 attempts with 1s delay, pcall wrapped |
-| Auto-save | Debounced (6s min), save on round end + player leave |
-| XP progression | Config-driven level curve (100 * level^1.5) |
-| Currency awards | Score-based earnings (0.2 per point) |
-| BindToClose | Server shutdown saves all players |
-
-**GameManager Integration:**
-- Calls DataManager.UpdateRoundStats on round end
-- Awards XP: BaseXP + (bullseyes × 10) + (score / 2)
-- Awards currency: score × 0.2
-- Tracks level ups and sends to client
-
-**HUDController Updates:**
-- Displays XP earned in round summary
-- Displays currency earned in round summary
-- Shows level up notification with new level
-- Color-coded progression stats
-
-**Manual Step Required:** Enable "Studio Access to API Services" in Game Settings → Security
-
-**Playtest:** Zero errors, all four scripts initialize correctly ✓
-
----
-
-### 2026-03-25: Phase 2 Core Mechanic (COMPLETE)
-
-**Status:** COMPLETE
-
-Implemented full bow controller, arrow flight, hit detection, round lifecycle, and HUD:
-
-**BowController.client.luau** (StarterPlayerScripts):
-| Feature | Implementation |
-|---------|----------------|
-| Mouse aim tracking | Camera ray through mouse position to world |
-| Draw mechanic | Hold LMB charges power 0-100% over 1.5s |
-| Power meter UI | Right-side vertical bar, green→yellow→red gradient |
-| Trajectory preview | 20-segment dotted arc showing predicted flight path |
-| Fire action | Sends direction + power to server via FireArrow remote |
-
-**GameManager.server.luau** (ServerScriptService):
-| Feature | Implementation |
-|---------|----------------|
-| Input validation | Rate limiting (0.5s cooldown), direction/power bounds check |
-| Arrow visual | Wooden shaft + metal tip + red fletching |
-| Physics simulation | Kinematic equation with gravity (196.2 studs/s²) |
-| Hit detection | Ray-plane intersection at target Z position |
-| Zone scoring | Distance from bullseye → zone lookup from Config |
-| Result feedback | ArrowResult remote sends hit/miss + zone + score to client |
-
-**Security Model:**
-- Client sends intent only (direction, power)
-- Server validates all inputs
-- Server runs physics simulation independently
-- Server determines hit/score authoritatively
-
-**Round Lifecycle (GameManager.server.luau):**
-| Feature | Implementation |
-|---------|----------------|
-| PlayerRoundState | Type tracking arrows, score, round state per player |
-| 10 arrows per round | Configurable ARROWS_PER_ROUND constant |
-| Auto-start | Round begins on first fire for convenience |
-| Score accumulation | Running total + per-arrow score history |
-| Round end stats | Accuracy, bullseyes, best shot, total score |
-
-**HUDController.client.luau** (StarterPlayerScripts):
-| Feature | Implementation |
-|---------|----------------|
-| Score display | Top-center HUD with gold score value |
-| Arrows remaining | X/10 format with color coding (blue→yellow→red) |
-| Hit feedback | Animated zone name + points, floats up and fades |
-| Round summary | Modal panel with stats: score, hits, bullseyes, accuracy, best shot |
-| Play Again | Button to start new round |
-
-**Playtest:** Zero errors, all three scripts initialize correctly ✓
-
----
-
-### 2026-03-25: Arena Visual Polish (Full Roblox Stack)
-
-**Status:** COMPLETE
-
-Enhanced arena using full Roblox visual systems per user request for "something magnificent":
-
-**Terrain System:**
-| Material | Location | Purpose |
-|----------|----------|---------|
-| Grass | Arena base | Natural ground covering |
-| Ground/Dirt | Main path, scattered patches | Worn walking paths |
-| Sand | Target area | Packed firing range |
-| Slate | Platform surroundings | Stone flooring |
-| Rock | Arena edges | Natural rock outcrops |
-| Water | Small pond (-32, -27) | Ambient water feature |
-
-**Atmospheric Particles (3 systems):**
-| System | Location | Effect |
-|--------|----------|--------|
-| DustMotes | Overhead (80x80 area) | Floating dust in sunlight |
-| FloatingLeaves | Near trees | Drifting autumn leaves |
-| Pollen | Ground level | Ambient pollen/seeds |
-
-**Torches (10 units with full effects):**
-- Fire ParticleEmitter (yellow→orange→red gradient)
-- Smoke ParticleEmitter (gray, rising with wind drift)
-- Spark ParticleEmitter (yellow embers)
-- PointLight (warm orange, 25 stud range, shadows enabled)
-- Positioned around platform, target area, and paths
-
-**Target Enhancement:**
-- Neon material on bullseye (self-illuminating)
-- SurfaceLight on each scoring zone (front + back)
-- SpotLight highlighting bullseye from above
-- TargetAura particle ring on edge
-- HitReadyPulse particles on bullseye
-
-**Lighting (already configured):**
-- Atmosphere, Bloom, ColorCorrection, SunRays, DepthOfField
-- ClockTime = 14 (2 PM golden hour)
-- GlobalShadows enabled
-
-**Note:** Ambient sounds removed due to Roblox Audio Privacy restrictions. Add manually via View → Asset Manager → Audio Library.
-
-**Playtest:** Zero errors ✓
-
----
-
-### 2026-03-25: Phase 1 Foundation (Clean Rebuild)
-
-**Status:** COMPLETE
-
-Cleared previous Studio content and rebuilt from scratch per MVP task list:
-
-**Workspace:**
-| Instance | Type | Description |
-|----------|------|-------------|
-| `Arenas/training_grounds_arena` | Model (8 parts) | 100x100 grass floor, stone border, dirt path, firing line marker, wooden backdrop |
-| `Targets/archery_target` | Model (10 parts) | 4 scoring zones (Bullseye/Inner/Outer/Edge) + wooden stand |
-| `SpawnLocations/FiringLineSpawn` | SpawnLocation | Player spawn at z=-5, facing target |
-
-**ReplicatedStorage:**
-| Instance | Type | Description |
-|----------|------|-------------|
-| `Modules/Config` | ModuleScript | All game constants (physics, scoring, progression, rankings, daily rewards) |
-| `Modules/Types` | ModuleScript | PlayerData type, remote payloads, GetDefaultPlayerData() |
-| `Remotes/` | Folder | 10 RemoteEvents + 2 RemoteFunctions per GDD spec |
-| `Assets/` | Folder | Empty (for future bow/arrow models) |
-
-**StarterGui:**
-- Created folders: HUD, ShopGui, ProgressionGui, ResultsGui, DailyRewardGui, DuelGui
-
-**Build Library:**
-- `misc/training_grounds_arena` — Procedural arena build
-- `misc/archery_target` — Target with scoring zones
-
-**Playtest:** Zero errors ✓
-
----
-
-### 2026-03-25: Operational Structure Setup
-
-**Status:** COMPLETE
-
-Created operational documentation structure mirroring ATL project:
-
-| Component | Path | Purpose |
-|-----------|------|---------|
-| BOOT.md | `_ops/BOOT.md` | Document authority hierarchy |
-| PROJECT_OPERATING_MODEL.md | `_ops/PROJECT_OPERATING_MODEL.md` | Operational rules |
-| PROJECT_IDENTITY.md | `_ops/PROJECT_IDENTITY.md` | Project context |
-| PROGRESS.md | `_ops/PROGRESS.md` | This file |
-| NEXT_STEPS.md | `_ops/NEXT_STEPS.md` | Priorities |
-| start-session.md | `.claude/commands/start-session.md` | Session init command |
-| _README.md | `.claude/commands/_README.md` | Commands documentation |
-
----
-
-## Pre-Existing Assets
-
-### Documentation (docs/)
-- `game-design-document.md` — Full GDD with mechanics, modes, progression, monetization
-- `engagement-psychology.md` — Retention mechanics and FOMO systems
-- `mvp-task-list.md` — 20-day phased build plan
-
-### Project Root
-- `CLAUDE.md` — Tech stack, conventions, MCP integration, verification
-
-### Build Library (builds/)
-- TBD — MCP exports will be stored here
+### 2026-03-25: Phases 1-2 + Foundation (COMPLETE)
+
+- Operational structure (_ops/, .claude/)
+- Phase 1: Arena, target, Config, Types, Remotes
+- Arena visual polish (terrain, particles, torches)
+- Phase 2: BowController, arrow flight, hit detection, round lifecycle, HUD
 
 ---
 
@@ -491,15 +301,6 @@ Created operational documentation structure mirroring ATL project:
 
 | Date | Change |
 |------|--------|
-| 2026-03-25 | Initial PROGRESS.md created |
-| 2026-03-25 | Operational structure (_ops/, .claude/) established |
-| 2026-03-25 | Arena visual polish complete (terrain, particles, torches, target glow) |
-| 2026-03-25 | Phase 2 core mechanic started (BowController, arrow flight, hit detection) |
-| 2026-03-26 | Phase 5 complete (Daily Reward UI, Leaderboard UI, Shop system) |
-| 2026-03-26 | Phase 6 Practice Mode complete (unlimited arrows, no persistence) |
-| 2026-03-26 | Phase 6 Duel Mode complete (1v1 matchmaking, turns, rewards) |
-| 2026-03-26 | Phase 6 Game Passes complete (VIP, Double Currency, Radio) |
-| 2026-03-26 | Code Quality Audit complete (rate limiting, input validation) |
-| 2026-03-26 | Arena fixes (spawn position, banner visibility, ambiance) |
-| 2026-03-26 | **MVP COMPLETE** — All 6 phases finished |
-| 2026-03-27 | First-person bow design session — ViewportFrame approach chosen |
+| 2026-03-25 | Initial PROGRESS.md, Phases 1-2, arena polish |
+| 2026-03-26 | Phases 3-6 complete, MVP finished |
+| 2026-03-27 | World bow, environment overhaul, HUD reorder, sound assets |
