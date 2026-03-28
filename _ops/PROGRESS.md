@@ -2,7 +2,7 @@
 
 **Last Updated:** 2026-03-28
 **Project:** Archery Legends (Roblox Archery Game)
-**Phase:** Post-MVP — Gameplay Polish & Bug Fixes
+**Phase:** Post-MVP — Multi-Zone Architecture & HUD Polish
 
 ---
 
@@ -28,10 +28,69 @@
 | **Sound Integration** | **COMPLETE** | SoundManager module, all 16 sounds tuned + wired |
 | **Accuracy System** | **COMPLETE** | Server-side spread, SteadyHand shop item, power scaling |
 | **Gameplay Fixes** | **COMPLETE** | Platform, HUD, lane length, arrow flight, bullseye detection |
+| **Community Hub** | **COMPLETE** | 150-stud courtyard, 6 range gates, crowd magnets, shops |
+| **Castle Range** | **COMPLETE** | Enclosed stone hall, throne target, tapestries, armored suits |
+| **Multi-Target Engine** | **COMPLETE** | GameManager ranges registry, position-based detection |
+| **Context-Sensitive HUD** | **COMPLETE** | Hub mode (compact) vs Range mode (full), smooth tweens |
 
 ---
 
 ## Completed Work
+
+### 2026-03-28: Context-Sensitive HUD System (COMPLETE)
+
+**Status:** COMPLETE
+
+Added position-based HUD mode switching with smooth tween transitions.
+
+| Feature | Details |
+|---------|---------|
+| Hub mode | Compact panel (75px): Level, XP bar, Currency, Streak only |
+| Range mode | Full panel (160px): all gameplay elements visible |
+| Range badge | Top-center badge showing "GREENWOOD RANGE" / "CASTLE RANGE" |
+| Zone detection | Client-side position check with 5-stud hysteresis at 4Hz |
+| Tween transitions | 0.3s Quad ease, tween cancellation on rapid switching |
+| Gate prompts | ProximityPrompts on all 6 range gates |
+
+**Critic fixes applied:** Synchronous gameplayRows collection (was task.defer race), tween cancellation (was stacking), getFirePosition forward reference (was nil call).
+
+---
+
+### 2026-03-28: Castle Range Build (COMPLETE)
+
+**Status:** COMPLETE
+
+Full Castle Range with GameManager multi-target refactor.
+
+**GameManager Refactor:**
+- Replaced single `target: Model?` with `ranges: {[string]: Model}` registry
+- Added `detectPlayerRange(player)` — X > 50 = castle
+- `simulateArrowFlight` now takes `rangeId` parameter
+- Both targets registered on init
+
+**Castle Interior (workspace.CastleRange):**
+- 22x15x60 stud enclosed stone hall at X=85
+- 8 marble columns, 4 vaulted arches, red carpet with gold borders
+- Throne target at Z=45 (5 scoring rings matching Greenwood geometry)
+- Gold crown as bullseye (smallest part detection)
+- 6 heraldic tapestries (Lion, Eagle, Dragon, Stag, Crown, Shield)
+- 6 armored suits with shields + swords
+- 12 wall torches, 2 chandeliers, 2 throne spotlights
+- Angled corridor connecting hub gate to hall entrance
+
+---
+
+### 2026-03-28: Community Hub & Multi-Zone Architecture (COMPLETE)
+
+**Status:** COMPLETE
+
+Built 150-stud hub-and-spoke courtyard with 6 range gates and crowd magnets.
+
+**Hub Features:** Marble fountain, 4 trampolines, carousel (6 seats + lights), campfire (8 log seats), winners podium (G/S/B + spotlight), market stalls (3 shops), daily spin wheel, VIP lounge (red carpet + velvet ropes), Game Pass display boards, "The Archer's Rest" tavern (6 bow skin displays), "The Outfitter" character skin shop (6 mannequins + mirror).
+
+**6 Range Gates:** Greenwood (open), Castle (open, Level 5), Ember Depths (locked, embers), Crystal Caverns (locked, frost), Sky Temple (locked, golden beams), Sunken Sanctum (locked, octopus tentacle).
+
+---
 
 ### 2026-03-28: Gameplay Polish & Critical Bug Fixes (COMPLETE)
 
