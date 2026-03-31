@@ -1,48 +1,51 @@
 # Archery Legends Next Steps
 
-**Last Updated:** 2026-03-28
-**Current Phase:** Pre-Publish Final Polish
+**Last Updated:** 2026-03-31
+**Current Phase:** Village Trails & World Polish
 
 ---
 
-## Immediate: Gameplay Testing
+## Immediate
 
-### Full End-to-End Test
-- [ ] Hub → Greenwood: countdown, shoot 10, verify popups/particles/streak/round end
-- [ ] Hub → Castle: same test at throne target
-- [ ] Verify HUD transitions (hub compact → range full → hub compact)
-- [ ] Test spin wheel: approach, spin, receive reward, disabled after
-- [ ] Test shop: open, switch to SKINS tab, browse character skins
-- [ ] Verify character skin applies on equip (body colors change)
+- [ ] Village Trails Phase 2: Build 4 locked trail extensions (Ember, Crystal, Sky, The Deep)
+- [ ] Each trail themed from first step — volcanic rock, frost, marble, coral
+- [ ] Grand themed posters on locked gates (SurfaceGui with UIGradient)
+- [ ] Relocate Carousel to village south edge, VIP Lounge to Sky Temple trail
 
----
+## Soon
+
+- [ ] Full gameplay test: fire rounds in Greenwood + Castle, verify all feedback systems
+- [ ] Verify sightline blockers work from village center (both trails)
+- [ ] Test respawn at range SpawnLocations (die in range → respawn at range)
+- [ ] Test rank-based duel matchmaking with multiple players
 
 ## Pre-Publish Checklist
+
 - [ ] Replace Game Pass placeholder IDs (currently 0)
 - [ ] Enable "Studio Access to API Services" for DataStore testing
-- [ ] Final zero-error playtest with DataStore enabled
 - [ ] Test on mobile device
 - [ ] Set game icon and thumbnails
 - [ ] Level 5 gate check for Castle Range entrance
 
 ---
 
-## Completed This Session
+## Completed This Session (Mar 28-31)
 
 | Task | Status |
 |------|--------|
-| Phase 1: Server mechanics (countdown, arrow stick, distanceFromCenter) | DONE |
-| Phase 2: Client feedback (countdown, popups, particles, shake, streak, near-miss, arrow pulse) | DONE |
-| Phase 3: Greenwood polish (hay bales, markers, trees, flowers, backstop, fences) | DONE |
-| Phase 4: Castle polish (throne steps, banners, weapons, stained glass, dust, arches, sconces, crown sparkle) | DONE |
-| Character skin system (Config, Types, ShopManager, ShopController, applier) | DONE |
-| Daily spin wheel (SpinWheelController, animation, ClaimDailyReward integration) | DONE |
-| Hub cleanup (trees cleared, pathways, lamps, benches, flowers, ground) | DONE |
-| Gate wall decorations (Ember/Crystal/Sky/Deep themed walls + octopus) | DONE |
-| Community hub (150-stud courtyard, 6 gates, shops, tavern, outfitter, carousel, campfire) | DONE |
-| Castle Range (stone hall, throne, tapestries, armored suits, corridor) | DONE |
-| Context-sensitive HUD (hub/range mode switching) | DONE |
-| Multi-target GameManager (ranges registry) | DONE |
-| Accuracy spread system | DONE |
-| Sound integration (SoundManager, 16 tuned sounds) | DONE |
-| UI polish (mobile responsive, green theme) | DONE |
+| Village Trails Phase 1 (Greenwood + Castle extensions) | DONE |
+| Greenwood sightline blocker (20-stud tree wall) | DONE |
+| Greenwood trail props (path, trees, ferns, stream, bridge, logs) | DONE |
+| Castle sightline blocker (stone wall with gate entrance) | DONE |
+| Castle trail props (flagstone, lanterns, banners, guard statues) | DONE |
+| Tavern relocated to Greenwood trail midpoint | DONE |
+| Outfitter relocated to Castle trail start | DONE |
+| Range SpawnLocations + respawn logic in GameManager | DONE |
+| Rank-based duel matchmaking (±1 tier, 15s expand to ±2) | DONE |
+| Fixed floating green artifacts (BackstopTop overlapping target) | DONE |
+| Removed Greenwood hub gate (replaced by trail blocker) | DONE |
+| Cleared 96 forest tree parts from lane/target zone | DONE |
+| Added 29 trees flanking lane + right side tree line | DONE |
+| Raised 81 buried parts above grade (flowers, paths, trail props) | DONE |
+| Bow release sound fixed (rope creak at 2.5x speed) | DONE |
+| Village Trails spec v2 written + critic reviewed | DONE |

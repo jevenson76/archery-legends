@@ -1,8 +1,8 @@
 # Archery Legends Progress Log
 
-**Last Updated:** 2026-03-28
+**Last Updated:** 2026-03-31
 **Project:** Archery Legends (Roblox Archery Game)
-**Phase:** Post-MVP — Range Polish & Gameplay Feedback
+**Phase:** Post-MVP — Village Trails & World Polish
 
 ---
 
@@ -40,6 +40,8 @@
 | **Castle Range Polish** | **COMPLETE** | Steps, banners, weapons, glass, dust, arches, sconces, crown sparkle |
 | **Character Skins** | **COMPLETE** | 6 skins in shop, body color applier, SKINS tab |
 | **Daily Spin Wheel** | **COMPLETE** | SpinWheelController, animation, reward popup, confetti |
+| **Village Trails Phase 1** | **COMPLETE** | Greenwood + Castle trail extensions, sightline blockers |
+| **Rank-Based Matchmaking** | **COMPLETE** | ±1 tier matching, 15s expansion to ±2 tiers |
 
 ---
 
